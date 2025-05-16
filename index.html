@@ -157,23 +157,21 @@
     ];
     const allRoles = roles.map(r=>r.role);
 
-    // Rich Lithuanian meme name database
+    // Only use these names/surnames, rare ones for rarity logic
     const firstNames = [
-      "Kostės", "Arno", "Saldus", "Nergis", "Cumbuketas", "Skibidis", "Rizardas", "Fanumė", "Gufis", "Livis", "Neonas",
-      "Zestas", "Šlamščius", "Bliurkė", "Dūmas", "Sasis", "Gleizė", "Mogis", "Ohajas", "Ožys", "Simpas", "Griozdas",
-      "Sigmis", "Bumeris", "Goblinas", "Tung", "Bombardino", "Capučinas", "Shampanzinis", "Brr Brr", "Taleleras",
-      "Kostelis", "Tarpukaris", "Balandis", "Koldunas", "Rytis", "Kebabas", "Pilvas", "Zebras", "Nuogas", "Erelis",
-      "Baronka", "Zveris", "Sultinis", "Koldunas", "Blynas", "Velikinis", "Seksius", "Baka", "Gandonas", "Drocintonas",
-      "Negras", "Urodas", "Bybiakaušis", "Gandonavičius", "Tampikas", "Homofobas", "Pusnuogis"
+      "Kostė", "Arnas", "Saldus", "Negras", "Cumbuketas", "Skibidas", "Rizardas", "Fanumas", "Gufis", "Livis", "Neonas",
+      "Zestas", "Sasis", "Gleizas", "Mogas", "Ohajas", "Ožys", "Simpas", "Griozdas",
+      "Sigma", "Bumeris", "Goblinas", "Tung", "Bombardinas", "Capučinas", "Shampanzinis", "Brr Brr", "Taleleras",
+      "Kostelinas", "Balandis", "Koldunas", "Cesnakinis", "Nuogas", "Erelis", "Zveris", "Jucis", "Koldunas", "Velikinis", "Seksius", "Baka", "Gandonas", "Drocintonas",
+      "Juodasiknis", "Urodas", "Bybiakaušis", "Gandonavičius", "Tampikas", "Homofobas", "Pusnuoginas"
     ];
     const rareFirstNames = ["Titas"];
     const surnames = [
-      "Papas", "Bibys", "Grybauskaitis", "Stulbas", "Bumeris", "Niksonas", "Taksonas", "Mulletas", "Danė", "Vėjinas",
+      "Papas", "Bibys", "Grybauskaitis", "Stulpas", "Bumeris", "Niksonas", "Taksonas", "Mulletas",
       "Zubazas", "TikTokas", "Memė", "Influis", "Imposteris", "Diskas", "Mėnulis", "Tūlas", "Padažas", "Blokas",
-      "Kasetė", "Sonis", "Rizas", "Grandas", "Assasinas", "Bananas", "Patapimas", "Tralala", "Storelis", "Zmogus",
-      "Zombis", "Zveris", "Bumbulis", "Storas", "Griaustinis", "Kebabras", "Dviratis", "Cepelinas", "Stiprus",
-      "Batai", "Ryklys", "Riteris", "Pystas", "Kiausininis", "Susis", "Pidarelis", "Eksadronas",
-      "Liesbietis", "Sliukonas", "Tuntuhas", "Drekintuvas", "Prostitutas", "Čiulpikas", "Gejutraukis", "Alkapone"
+      "Kasetė", "Sonis", "Rizas", "Grandas", "Assasinas", "Banananinas", "Patapimas", "Tralala",
+      "Zombeloidas", "Bumbulis", "Storas", "Griaustinis", "Pystas", "Kiausininis", "Susainis", "Pidarelis", "Eksadronas",
+      "Liesbietis", "Sliukonas", "Tuntuhas", "Drekintuvas", "Prostitutas", "Ciulpikas", "Gejutraukis", "Alkapone", "Trapezoidas"
     ];
     const rareSurnames = ["Samsonas"];
 
@@ -182,9 +180,8 @@
       let isRare = false;
       let fn, sn;
       while (tries++ < 1000) {
-        // 1 in 25 chance for rare first/last name
-        let useRareFirst = (Math.random() < 1/100);
-        let useRareSurname = (Math.random() < 1/100);
+        let useRareFirst = (Math.random() < 1/25);
+        let useRareSurname = (Math.random() < 1/25);
 
         if (useRareFirst) {
           fn = rareFirstNames[0];
