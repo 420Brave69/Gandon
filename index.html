@@ -157,35 +157,34 @@
     ];
     const allRoles = roles.map(r=>r.role);
 
-    // Lithuanian meme names, split to name/surname for mixing, with more names added
+    // Rich Lithuanian meme name database
     const firstNames = [
-      "Kostė", "Arnas", "Saldus", "Negras", "Cumbuketas", "Skibidas", "Rizardas", "Fanumas", "Gufis", "Livis", "Neonas",
-      "Zestas", "Sasis", "Gleizas", "Mogas", "Ohajas", "Ožys", "Simpas", "Griozdas",
-      "Sigma", "Bumeris", "Goblinas", "Tung", "Bombardinas", "Capučinas", "Shampanzinis", "Brr Brr", "Taleleras",
-      "Kostelinas", "Balandis", "Koldunas", "Cesnakinis", "Nuogas", "Erelis", "Zveris", "Jucis", "Koldunas", "Velikinis", "Seksius", "Baka", "Gandonas", "Drocintonas",
-      "Juodasiknis", "Urodas", "Bybiakaušis", "Gandonavičius", "Tampikas", "Homofobas", "Pusnuoginas"
-      // "Titas" intentionally omitted from here for rarity
+      "Kostės", "Arno", "Saldus", "Nergis", "Cumbuketas", "Skibidis", "Rizardas", "Fanumė", "Gufis", "Livis", "Neonas",
+      "Zestas", "Šlamščius", "Bliurkė", "Dūmas", "Sasis", "Gleizė", "Mogis", "Ohajas", "Ožys", "Simpas", "Griozdas",
+      "Sigmis", "Bumeris", "Goblinas", "Tung", "Bombardino", "Capučinas", "Shampanzinis", "Brr Brr", "Taleleras",
+      "Kostelis", "Tarpukaris", "Balandis", "Koldunas", "Rytis", "Kebabas", "Pilvas", "Zebras", "Nuogas", "Erelis",
+      "Baronka", "Zveris", "Sultinis", "Koldunas", "Blynas", "Velikinis", "Seksius", "Baka", "Gandonas", "Drocintonas",
+      "Negras", "Urodas", "Bybiakaušis", "Gandonavičius", "Tampikas", "Homofobas", "Pusnuogis"
     ];
     const rareFirstNames = ["Titas"];
     const surnames = [
-      "Papas", "Bibys", "Grybauskaitis", "Stulpas", "Bumeris", "Niksonas", "Taksonas", "Mulletas",
+      "Papas", "Bibys", "Grybauskaitis", "Stulbas", "Bumeris", "Niksonas", "Taksonas", "Mulletas", "Danė", "Vėjinas",
       "Zubazas", "TikTokas", "Memė", "Influis", "Imposteris", "Diskas", "Mėnulis", "Tūlas", "Padažas", "Blokas",
-      "Kasetė", "Sonis", "Rizas", "Grandas", "Assasinas", "Banananinas", "Patapimas", "Tralala",
-      "Zombeloidas", "Bumbulis", "Storas", "Griaustinis", "Pystas", "Kiausininis", "Susainis", "Pidarelis", "Eksadronas",
-      "Liesbietis", "Sliukonas", "Tuntuhas", "Drekintuvas", "Prostitutas", "Ciulpikas", "Gejutraukis", "Alkapone", "Trapezoidas"
-      // "Samsonas" intentionally omitted from here for rarity
+      "Kasetė", "Sonis", "Rizas", "Grandas", "Assasinas", "Bananas", "Patapimas", "Tralala", "Storelis", "Zmogus",
+      "Zombis", "Zveris", "Bumbulis", "Storas", "Griaustinis", "Kebabras", "Dviratis", "Cepelinas", "Stiprus",
+      "Batai", "Ryklys", "Riteris", "Pystas", "Kiausininis", "Susis", "Pidarelis", "Eksadronas",
+      "Liesbietis", "Sliukonas", "Tuntuhas", "Drekintuvas", "Prostitutas", "Čiulpikas", "Gejutraukis", "Alkapone"
     ];
     const rareSurnames = ["Samsonas"];
 
-    // Ensures Titas and Samsonas are only 1 in 25
     function randomUniqueName(usedNames) {
       let tries = 0;
       let isRare = false;
       let fn, sn;
       while (tries++ < 1000) {
         // 1 in 25 chance for rare first/last name
-        let useRareFirst = (Math.random() < 1/25);
-        let useRareSurname = (Math.random() < 1/25);
+        let useRareFirst = (Math.random() < 1/100);
+        let useRareSurname = (Math.random() < 1/100);
 
         if (useRareFirst) {
           fn = rareFirstNames[0];
@@ -283,7 +282,6 @@
       const potential = roll(100,180);
       let gender = "♂";
       let rainbow = false;
-      // Only rare if 1/25 and matches specifically
       if(fn === "Titas" || sn === "Samsonas") {
         gender = "Gay";
         rainbow = true;
@@ -400,4 +398,52 @@
             <div class="stat-panel">
               <div class="stat-title">GOALKEEPING <span style="font-size:.97em;font-weight:700;color:#fff">${Math.round((p.goalkeeping.reduce((a,b)=>a+b,0)/p.goalkeeping.length)||0)}</span></div>
               <ul class="stat-list">
-                ${statDefs.Goalkeeping.map((s,i)=>`<li>${s}<span class="${statClass(p.goalkeeping[i],12)}">${p.goalkeeping[i]}</span></li>`).
+                ${statDefs.Goalkeeping.map((s,i)=>`<li>${s}<span class="${statClass(p.goalkeeping[i],12)}">${p.goalkeeping[i]}</span></li>`).join("")}
+              </ul>
+            </div>
+            `:""}
+          </div>
+        </div>
+      `;
+    }
+    function avg(arr) { return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0; }
+    function updateSummary() {
+      let tTec=[], tMen=[], tPhy=[], tGk=[];
+      players.forEach(p=>{
+        tTec.push(...p.technical);
+        tMen.push(...p.mental);
+        tPhy.push(...p.physical);
+        if(p.type==="GK" && p.goalkeeping.length) tGk.push(...p.goalkeeping);
+      });
+      const sumBox = document.getElementById("stats-summary");
+      sumBox.innerHTML = `
+        <div class="stats-summary-box"><span class="stats-summary-label">TEC avg:</span> <span class="stats-summary-val">${(avg(tTec)||0).toFixed(2)}</span></div>
+        <div class="stats-summary-box"><span class="stats-summary-label">MEN avg:</span> <span class="stats-summary-val">${(avg(tMen)||0).toFixed(2)}</span></div>
+        <div class="stats-summary-box"><span class="stats-summary-label">PHY avg:</span> <span class="stats-summary-val">${(avg(tPhy)||0).toFixed(2)}</span></div>
+        <div class="stats-summary-box"><span class="stats-summary-label">GK avg:</span> <span class="stats-summary-val">${tGk.length?(avg(tGk)).toFixed(2):"-"}</span></div>
+      `;
+    }
+    document.getElementById('search').addEventListener('input', function() {
+      searchText = this.value;
+      updateTable();
+    });
+    document.getElementById('pos-filter').addEventListener('change', function() {
+      posFilterVal = this.value;
+      updateTable();
+    });
+    document.getElementById('btn-generate').onclick = ()=>{
+      generateSquad();
+      updateSummary();
+    };
+    document.getElementById('btn-save').onclick = saveSquad;
+    document.getElementById('btn-load').onclick = loadSquad;
+    document.getElementById('btn-potential').onclick = function() {
+      showPotential = !showPotential;
+      this.innerText = showPotential ? "Hide Potential" : "Show Potential";
+      updatePlayerDetail();
+    };
+    generateSquad();
+    updateSummary();
+  </script>
+</body>
+</html>
