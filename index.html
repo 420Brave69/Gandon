@@ -6,59 +6,73 @@
   <meta name="viewport" content="width=900">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    body { margin: 0; background: #20293b; color: #eaeaea; font-family: 'Inter', Arial, sans-serif; min-width: 900px;}
-    .header { background: linear-gradient(90deg, #4562b1 60%, #6096fd 100%); padding: 24px 0 16px 0; }
+    body { margin: 0; background: #191026; color: #e0d7f8; font-family: 'Inter', Arial, sans-serif; min-width: 900px;}
+    .header { background: linear-gradient(90deg, #2a134a 50%, #6e49d0 100%); padding: 24px 0 16px 0; }
     .header-content { max-width: 900px; margin: 0 auto; display:flex;align-items:center;}
     .header-title { font-family: 'Montserrat', Arial, sans-serif; font-size: 1.75rem; font-weight: 700; color: #fff; letter-spacing:1.5px; text-shadow:0 2px 8px #2228;}
     .header-actions { display: flex; gap: 12px; margin-left: auto;}
     .header-actions button { font-size: 1rem; font-weight: 500; border: none; border-radius: 6px; padding: 8px 22px; cursor: pointer; outline:none; box-shadow:0 2px 8px #0002; transition: transform 0.15s, box-shadow 0.25s;}
-    .header-actions button.gen { background: #6096fd; color: #fff;}
-    .header-actions button.save { background: #ffd600; color: #222;}
-    .header-actions button.load { background: #6ccf80; color: #222;}
-    .header-actions button.potential { background: #e74c3c; color: #fff;}
+    .header-actions button.gen { background: #6e49d0; color: #fff;}
+    .header-actions button.save { background: #d9a6ff; color: #2a134a;}
+    .header-actions button.load { background: #b785fd; color: #2a134a;}
+    .header-actions button.potential { background: #b01ad9; color: #fff;}
     .header-actions button:active { transform: scale(0.97);}
-    .header-actions button:hover { box-shadow:0 4px 16px #0003;}
+    .header-actions button:hover { box-shadow:0 4px 16px #6e49d044;}
     .container { max-width: 900px; margin: 0 auto; padding-top: 18px;}
-    .players-table { width: 100%; border-collapse: collapse; background: #24315a; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 16px #0004;}
+    .players-table { width: 100%; border-collapse: collapse; background: #23143b; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 16px #0004;}
     .players-table th, .players-table td { font-size: 1.03rem; text-align: left; padding: 10px 8px;}
-    .players-table th { background: #151c2c; color: #b0b8c8; font-weight: 600; transition: background 0.2s;}
-    .players-table tr { background: #212c47; border-bottom: 1px solid #2e3959; animation: fadeInRow 0.6s;}
-    .players-table tr.selected, .players-table tr:hover { background: linear-gradient(90deg,#27449d 80%, #6096fd 120%);}
+    .players-table th { background: #25123a; color: #c9a0ff; font-weight: 600; transition: background 0.2s;}
+    .players-table tr { background: #191026; border-bottom: 1px solid #331c55; animation: fadeInRow 0.6s;}
+    .players-table tr.selected, .players-table tr:hover { background: linear-gradient(90deg,#33136d 80%, #6e49d0 120%);}
     .players-table td.name-cell { font-weight: bold;}
-    .players-table td.role-cell select { width: 185px; background: #26345a; color: #eaeaea; border: 1px solid #2e3959; border-radius: 4px; padding:3px 8px;}
-    .players-table .stat-highlight { color: #ffd600; font-weight: bold;}
-    .players-table .stat-low { color: #e74c3c; font-weight: 600;}
-    .edit-btn, .save-btn { background:#ffd600; color:#222; border-radius:5px; border:none; padding:2px 12px; cursor:pointer; margin-left:9px; font-weight: 600; font-size: 0.97em;}
-    .edit-btn:hover, .save-btn:hover { background:#ffe77a;}
-    .player-detail { display: flex; gap: 28px; margin-top: 32px; background: #1a2030; border-radius: 14px; padding: 34px 38px 34px 36px; box-shadow: 0 8px 32px #0007; animation: popIn 0.7s;}
+    .players-table td.role-cell { color: #a37aff;}
+    .players-table .stat-highlight { color: #c287ff; font-weight: bold;}
+    .players-table .stat-low { color: #ff50a9; font-weight: 600;}
+    .rainbow-glow {
+      background: linear-gradient(90deg, #FF0080, #7928CA, #0070F3, #00FFAE, #FFCB00, #FF0080);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      animation: rainbow 2.7s linear infinite;
+      font-weight: bold;
+      text-shadow: 0 0 8px #fff, 0 0 16px #ffbaff;
+    }
+    @keyframes rainbow {
+      0% {background-position:0% 50%;}
+      50% {background-position:100% 50%;}
+      100% {background-position:0% 50%;}
+    }
+    .player-detail { display: flex; gap: 28px; margin-top: 32px; background: #23143b; border-radius: 14px; padding: 34px 38px 34px 36px; box-shadow: 0 8px 32px #2a134a88; animation: popIn 0.7s;}
     .player-info { flex: 0 0 260px;}
     .player-name { font-family: 'Montserrat', Arial, sans-serif; font-weight: 700; font-size: 1.35em; color: #fff; letter-spacing:1px; margin-bottom:5px; text-shadow:0 2px 6px #0005;}
-    .player-meta { color: #b0b8c8; font-size: 1.07em; margin-bottom:5px;}
-    .player-pos { font-family: 'Montserrat', Arial, sans-serif; color: #ffd600; font-weight: 700;}
+    .player-meta { color: #c9a0ff; font-size: 1.07em; margin-bottom:5px;}
+    .player-pos { font-family: 'Montserrat', Arial, sans-serif; color: #d9a6ff; font-weight: 700;}
+    .player-gender { font-size:1.1em; color:#ff43d1; font-weight:700; margin-left:10px; text-shadow:0 0 6px #ff43d1;}
     .stat-panels { flex: 1 1 0; display: flex; gap: 28px;}
-    .stat-panel { min-width: 155px; background: #212c47; border-radius: 9px; padding: 13px 18px 16px 14px; color: #fff; font-size: 1.01em; box-shadow: 0 2px 14px #0003; animation: fadeInPanel 0.7s;}
-    .stat-title { font-family: 'Montserrat', Arial, sans-serif; color: #ffd600; font-weight: 700; font-size: 1.13em; margin-bottom: 7px;}
+    .stat-panel { min-width: 155px; background: #1e0d2c; border-radius: 9px; padding: 13px 18px 16px 14px; color: #fff; font-size: 1.01em; box-shadow: 0 2px 14px #0003; animation: fadeInPanel 0.7s;}
+    .stat-title { font-family: 'Montserrat', Arial, sans-serif; color: #b785fd; font-weight: 700; font-size: 1.13em; margin-bottom: 7px;}
     .stat-list { list-style: none; margin: 0; padding: 0;}
     .stat-list li { display: flex; justify-content: space-between;}
-    .stat-list .stat-highlight { color: #ffd600;}
-    .stat-list .stat-low { color: #e74c3c;}
+    .stat-list .stat-highlight { color: #c287ff;}
+    .stat-list .stat-low { color: #ff50a9;}
     .potential-hidden { display: none;}
-    .potential-shown .potential-hidden { display: inline; color: #e74c3c; font-weight: bold; margin-left: 10px;}
+    .potential-shown .potential-hidden { display: inline; color: #ff43d1; font-weight: bold; margin-left: 10px;}
     .search-row { display: flex; gap: 12px; margin-bottom: 15px;}
-    .search-bar { flex: 1 1 0; background: #26345a; border: 1.5px solid #2e3959; color: #eaeaea; font-size: 1.07rem; outline: none; border-radius: 5px; padding: 8px 14px; font-family: inherit;}
-    .dropdown { background: #26345a; border: 1.5px solid #2e3959; color: #eaeaea; border-radius: 5px; font-size: 1.07rem; padding: 8px 14px; font-family: inherit;}
+    .search-bar { flex: 1 1 0; background: #25123a; border: 1.5px solid #6e49d0; color: #c9a0ff; font-size: 1.07rem; outline: none; border-radius: 5px; padding: 8px 14px; font-family: inherit;}
+    .dropdown { background: #25123a; border: 1.5px solid #6e49d0; color: #c9a0ff; border-radius: 5px; font-size: 1.07rem; padding: 8px 14px; font-family: inherit;}
     .saved-toast {
       position: fixed;
       left: 50%; top: 28px; transform: translateX(-50%);
-      background: #ffd600; color: #212c47; font-weight:700; padding: 12px 36px;
-      border-radius: 7px; font-size: 1.12em; box-shadow:0 2px 10px #0007; z-index:999;
+      background: #6e49d0; color: #fff; font-weight:700; padding: 12px 36px;
+      border-radius: 7px; font-size: 1.12em; box-shadow:0 2px 10px #2a134a88; z-index:999;
       opacity: 0; pointer-events:none; transition: opacity .5s;
       animation: fadeInOut 2.5s;
     }
     .saved-toast.show { opacity:1;}
     .stats-summary {display:flex; gap:32px; margin:28px 0 8px 0; font-size:1.08em;}
-    .stats-summary-box {background:#24315a; border-radius:8px; padding:12px 22px;}
-    .stats-summary-label {color:#ffd600;font-weight:700;}
+    .stats-summary-box {background:#23143b; border-radius:8px; padding:12px 22px;}
+    .stats-summary-label {color:#d9a6ff;font-weight:700;}
     .stats-summary-val {margin-left:6px; font-weight:700;}
     @keyframes fadeInRow { from { opacity:0; transform:translateY(-18px);} to { opacity:1; transform:none; } }
     @keyframes popIn { 0% { transform:scale(0.93) translateY(30px); opacity:0; } 100% { transform:none; opacity:1; } }
@@ -74,8 +88,6 @@
       .stat-panels { flex-direction: column; gap: 16px;}
       .stats-summary { flex-direction:column; gap:12px;}
     }
-    .stat-edit { width:2.2em; text-align:center; border-radius:3px;border:1px solid #ffd600;background:#fff;color:#212c47;font-weight:700;}
-    .stat-edit:focus { outline:2px solid #ffd600; }
   </style>
 </head>
 <body>
@@ -83,7 +95,7 @@
     <div class="header-content">
       <div>
         <div class="header-title">Brain-Rot Football Manager Generator</div>
-        <div style="color:#b0b8c8;margin-bottom:8px;">Balanced Lithuanian meme squad, all stats editable, beautiful and brain-rotten.</div>
+        <div style="color:#b0b8c8;margin-bottom:8px;">Balanced Lithuanian meme squad, every player unique.</div>
       </div>
       <div class="header-actions">
         <button class="gen" id="btn-generate">Generate Squad</button>
@@ -114,12 +126,12 @@
           <th>Type</th>
           <th>Age</th>
           <th>Height</th>
+          <th>Weight</th>
           <th>Foot</th>
           <th>TEC</th>
           <th>MEN</th>
           <th>PHY</th>
           <th>GK</th>
-          <th>Edit</th>
         </tr>
       </thead>
       <tbody>
@@ -129,7 +141,6 @@
   </div>
   <div class="saved-toast" id="toast"></div>
   <script>
-    // Roles and types
     const roles = [
       // GK
       {role:"GK (D)", type:"GK"}, {role:"Sweeper Keeper (D/S/A)", type:"GK"},
@@ -146,15 +157,56 @@
     ];
     const allRoles = roles.map(r=>r.role);
 
-    // Lithuanian meme names
-    const memeNames = [
-      "Tung Sahuras", "Bombardino Krododilas", "Capučinas Assasinas", "Shampanzinis Bananinis", 
-      "Brr Brr Patapimas", "Taleleras Tralala", "Kostelis Storelis", "Tarpukaris Zmogus", "Balandis Zombis",
-      "Koldunas Zveris", "Rytis Bumbulis", "Kebabas Storas", "Pilvas Griaustinis", "Zebras Kebabras", "Nuogas Dviratis",
-      "Erelis Cepelinas", "Baronka Stiprus", "Zveris Batai", "Sultinis Ryklys", "Koldunas Riteris", "Blynas Pystas"
+    // Lithuanian meme names, split to name/surname for mixing, with more names added
+    const firstNames = [
+      "Kostė", "Arnas", "Saldus", "Negras", "Cumbuketas", "Skibidas", "Rizardas", "Fanumas", "Gufis", "Livis", "Neonas",
+      "Zestas", "Sasis", "Gleizas", "Mogas", "Ohajas", "Ožys", "Simpas", "Griozdas",
+      "Sigma", "Bumeris", "Goblinas", "Tung", "Bombardinas", "Capučinas", "Shampanzinis", "Brr Brr", "Taleleras",
+      "Kostelinas", "Balandis", "Koldunas", "Cesnakinis", "Nuogas", "Erelis", "Zveris", "Jucis", "Koldunas", "Velikinis", "Seksius", "Baka", "Gandonas", "Drocintonas",
+      "Juodasiknis", "Urodas", "Bybiakaušis", "Gandonavičius", "Tampikas", "Homofobas", "Pusnuoginas"
+      // "Titas" intentionally omitted from here for rarity
     ];
-    function randomMemeName() {
-      return memeNames[Math.floor(Math.random()*memeNames.length)];
+    const rareFirstNames = ["Titas"];
+    const surnames = [
+      "Papas", "Bibys", "Grybauskaitis", "Stulpas", "Bumeris", "Niksonas", "Taksonas", "Mulletas",
+      "Zubazas", "TikTokas", "Memė", "Influis", "Imposteris", "Diskas", "Mėnulis", "Tūlas", "Padažas", "Blokas",
+      "Kasetė", "Sonis", "Rizas", "Grandas", "Assasinas", "Banananinas", "Patapimas", "Tralala",
+      "Zombeloidas", "Bumbulis", "Storas", "Griaustinis", "Pystas", "Kiausininis", "Susainis", "Pidarelis", "Eksadronas",
+      "Liesbietis", "Sliukonas", "Tuntuhas", "Drekintuvas", "Prostitutas", "Ciulpikas", "Gejutraukis", "Alkapone", "Trapezoidas"
+      // "Samsonas" intentionally omitted from here for rarity
+    ];
+    const rareSurnames = ["Samsonas"];
+
+    // Ensures Titas and Samsonas are only 1 in 25
+    function randomUniqueName(usedNames) {
+      let tries = 0;
+      let isRare = false;
+      let fn, sn;
+      while (tries++ < 1000) {
+        // 1 in 25 chance for rare first/last name
+        let useRareFirst = (Math.random() < 1/25);
+        let useRareSurname = (Math.random() < 1/25);
+
+        if (useRareFirst) {
+          fn = rareFirstNames[0];
+        } else {
+          fn = firstNames[Math.floor(Math.random()*firstNames.length)];
+        }
+        if (useRareSurname) {
+          sn = rareSurnames[0];
+        } else {
+          sn = surnames[Math.floor(Math.random()*surnames.length)];
+        }
+        if (fn === rareFirstNames[0] || sn === rareSurnames[0]) isRare = true;
+
+        const full = fn + " " + sn;
+        if (!usedNames.has(full)) {
+          usedNames.add(full);
+          return {full, fn, sn, isRare};
+        }
+      }
+      // fallback if somehow all combinations are used
+      return {full: "Brr Brr Patapimas", fn: "Brr Brr", sn: "Patapimas", isRare: false};
     }
 
     function roll(min,max) { return Math.floor(Math.random()*(max-min+1))+min; }
@@ -162,7 +214,6 @@
       const t = roll(1,10);
       return t === 1 ? "Both" : (t < 6 ? "Left" : "Right");
     }
-    // Attribute definitions
     const statDefs = {
       Technical: [
         "Corners", "Crossing", "Dribbling", "Finishing", "First Touch", "Free Kick Taking", "Heading",
@@ -193,14 +244,12 @@
       if(val<=Math.floor(max/3)) return "stat-low";
       return "";
     }
-    // Map role to type
     function getRoleType(role) {
       let o = roles.find(r=>r.role===role);
       return o ? o.type : "MID";
     }
-    // Generate balanced squad: 1 GK, 5 DEF, 5 MID, 4 ATT
     function generateSquad() {
-      let used = {};
+      let used = {}, usedNames = new Set();
       function pickRole(type) {
         let pool = roles.filter(r=>r.type===type && !used[r.role]);
         if(pool.length===0) pool = roles.filter(r=>r.type===type);
@@ -209,20 +258,20 @@
         return r.role;
       }
       let squad = [];
-      squad.push(genPlayer(pickRole("GK"),"GK"));
-      for(let i=0;i<5;i++) squad.push(genPlayer(pickRole("DEF"),"DEF"));
-      for(let i=0;i<5;i++) squad.push(genPlayer(pickRole("MID"),"MID"));
-      for(let i=0;i<4;i++) squad.push(genPlayer(pickRole("ATT"),"ATT"));
+      squad.push(genPlayer(pickRole("GK"),"GK",usedNames));
+      for(let i=0;i<5;i++) squad.push(genPlayer(pickRole("DEF"),"DEF",usedNames));
+      for(let i=0;i<5;i++) squad.push(genPlayer(pickRole("MID"),"MID",usedNames));
+      for(let i=0;i<4;i++) squad.push(genPlayer(pickRole("ATT"),"ATT",usedNames));
       players = squad;
       selectedIdx = 0;
       updateTable();
       updatePlayerDetail();
       updateSummary();
     }
-    // Generate player
-    function genPlayer(role,type) {
-      const name = randomMemeName();
-      const age = roll(18,21), height = roll(150,190);
+    function genPlayer(role,type,usedNames) {
+      const nobj = randomUniqueName(usedNames);
+      const name = nobj.full, fn = nobj.fn, sn = nobj.sn;
+      const age = roll(18,21), height = roll(150,190), weight = roll(50,95);
       const tec = roll(statRanges.Technical[0], statRanges.Technical[1]);
       const men = roll(statRanges.Mental[0], statRanges.Mental[1]);
       const phy = roll(statRanges.Physical[0], statRanges.Physical[1]);
@@ -232,12 +281,17 @@
       const goalkeeping = type==="GK" ? statDefs.Goalkeeping.map(()=>roll(statRanges.Goalkeeping[0],statRanges.Goalkeeping[1])) : [];
       const foot = randomFoot();
       const potential = roll(100,180);
+      let gender = "♂";
+      let rainbow = false;
+      // Only rare if 1/25 and matches specifically
+      if(fn === "Titas" || sn === "Samsonas") {
+        gender = "Gay";
+        rainbow = true;
+      }
       return {
-        name, age, height, role, type, tec, men, phy, technical, mental, physical, foot, potential, goalkeeping, editing: false
+        name, fn, sn, age, height, weight, role, type, tec, men, phy, technical, mental, physical, foot, potential, goalkeeping, gender, rainbow
       };
     }
-
-    // Save/load
     function showToast(msg) {
       const toast = document.getElementById('toast');
       toast.innerText = msg;
@@ -258,14 +312,11 @@
       updateSummary();
       showToast("Squad loaded!");
     }
-
-    // State
     let players = [];
     let selectedIdx = 0;
     let showPotential = false;
     let searchText = "";
     let posFilterVal = "All";
-    // Table ordering: DEF, MID, ATT, GK
     function squadOrder(a,b) {
       const order = {DEF:0, MID:1, ATT:2, GK:3};
       if(order[a.type]!==order[b.type]) return order[a.type]-order[b.type];
@@ -281,117 +332,46 @@
       filtered.forEach((p,idx)=>{
         const isSel = (p.idx===selectedIdx);
         const gkVal = p.type==="GK" ? Math.round((p.goalkeeping.reduce((a,b)=>a+b,0)/p.goalkeeping.length)||0) : "-";
+        const nameTd = p.rainbow
+          ? `<span class="rainbow-glow">${p.name}</span>`
+          : p.name;
         tbody.innerHTML += `
           <tr class="${isSel?"selected":""}" data-idx="${p.idx}">
             <td>${idx+1}</td>
-            <td class="name-cell">${p.name}</td>
-            <td class="role-cell">${makeRoleSelect(p.role, p.idx, p.editing)}</td>
+            <td class="name-cell">${nameTd}${p.rainbow?' <span class="player-gender">(gay)</span>':''}</td>
+            <td class="role-cell">${p.role}</td>
             <td>${p.type}</td>
             <td>${p.age}</td>
             <td>${p.height}cm</td>
+            <td>${p.weight}kg</td>
             <td>${p.foot}</td>
-            <td class="${statClass(p.tec,12)}">${showStat(p.tec,12)}</td>
-            <td class="${statClass(p.men,14)}">${showStat(p.men,14)}</td>
-            <td class="${statClass(p.phy,13)}">${showStat(p.phy,13)}</td>
+            <td class="${statClass(p.tec,12)}">${p.tec}</td>
+            <td class="${statClass(p.men,14)}">${p.men}</td>
+            <td class="${statClass(p.phy,13)}">${p.phy}</td>
             <td>${gkVal}</td>
-            <td>${p.editing ? `<button class="save-btn" data-idx="${p.idx}">Save</button>` : `<button class="edit-btn" data-idx="${p.idx}">Edit</button>`}</td>
           </tr>
         `;
       });
-      // Row click selection
       Array.from(tbody.querySelectorAll("tr")).forEach(row=>{
-        row.onclick = (evt)=>{
-          if(evt.target.tagName==="SELECT" || evt.target.classList.contains("edit-btn") || evt.target.classList.contains("save-btn")) return;
+        row.onclick = ()=>{
           selectedIdx = Number(row.getAttribute("data-idx"));
           updateTable();
           updatePlayerDetail();
         };
       });
-      // Role change events
-      Array.from(document.querySelectorAll(".role-cell select")).forEach(sel=>{
-        sel.onchange = function() {
-          const idx = Number(this.getAttribute('data-idx'));
-          const val = this.value;
-          players[idx].role = val;
-          players[idx].type = getRoleType(val);
-          // If type changes to/from GK, adjust goalkeeping
-          if(players[idx].type==="GK" && players[idx].goalkeeping.length===0) 
-            players[idx].goalkeeping = statDefs.Goalkeeping.map(()=>roll(statRanges.Goalkeeping[0],statRanges.Goalkeeping[1]));
-          else if(players[idx].type!=="GK") players[idx].goalkeeping=[];
-          updateTable();
-          updatePlayerDetail();
-          updateSummary();
-        }
-      });
-      // Edit/save button events
-      Array.from(document.querySelectorAll(".edit-btn")).forEach(btn=>{
-        btn.onclick = function(e) {
-          e.stopPropagation();
-          const idx = Number(this.getAttribute('data-idx'));
-          players[idx].editing=true;
-          updateTable();
-          updatePlayerDetail();
-        };
-      });
-      Array.from(document.querySelectorAll(".save-btn")).forEach(btn=>{
-        btn.onclick = function(e) {
-          e.stopPropagation();
-          const idx = Number(this.getAttribute('data-idx'));
-          savePlayerEdits(idx);
-        };
-      });
-    }
-    function showStat(val,max) {
-      // Scale to 1-10
-      return val + ' <span style="font-size:.88em; color:#ffd600">(' + Math.round(val/max*10) + '/10)</span>';
-    }
-    function makeRoleSelect(selected,idx,editing) {
-      if(editing) return `<select data-idx="${idx}">`+allRoles.map(r=>
-        `<option value="${r}"${selected===r?' selected':''}>${r}</option>`
-      ).join("")+"</select>";
-      return selected;
     }
     function updatePlayerDetail() {
       const p = players[selectedIdx]||players[0];
       if(!p) { document.getElementById('player-detail').innerHTML = ""; return; }
-      // If editing, show inputs
-      if(p.editing) {
-        document.getElementById("player-detail").innerHTML = renderEditPanel(p, selectedIdx);
-        Array.from(document.querySelectorAll(".stat-edit")).forEach(input=>{
-          input.oninput = function() {
-            const idx = parseInt(this.dataset.idx);
-            const group = this.dataset.group;
-            const stat = this.dataset.stat;
-            let v = parseInt(this.value);
-            v = isNaN(v) ? 0 : v;
-            // Clamp to allowed
-            let min=2, max=20;
-            if(group==="Technical") min=statRanges.Technical[0], max=statRanges.Technical[1];
-            if(group==="Mental") min=statRanges.Mental[0], max=statRanges.Mental[1];
-            if(group==="Physical") min=statRanges.Physical[0], max=statRanges.Physical[1];
-            if(group==="Goalkeeping") min=statRanges.Goalkeeping[0], max=statRanges.Goalkeeping[1];
-            v = Math.max(min, Math.min(max, v));
-            players[selectedIdx][group.toLowerCase()][stat] = v;
-          }
-        });
-        document.getElementById("save-detail-btn").onclick = ()=>{
-          p.editing=false;
-          // Update tec/men/phy averages after edit
-          p.tec = Math.round(avg(p.technical));
-          p.men = Math.round(avg(p.mental));
-          p.phy = Math.round(avg(p.physical));
-          updateTable();
-          updatePlayerDetail();
-          updateSummary();
-        };
-        return;
-      }
+      const nameSpan = p.rainbow
+        ? `<span class="rainbow-glow">${p.name}</span>`
+        : p.name;
       document.getElementById("player-detail").innerHTML = `
         <div class="player-detail${showPotential?' potential-shown':''}">
           <div class="player-info">
-            <div class="player-name">${p.name}</div>
+            <div class="player-name">${nameSpan}${p.rainbow?' <span class="player-gender">(gay)</span>':''}</div>
             <div class="player-meta">
-              <span>${p.age} years</span> <span>${p.height} cm</span>
+              <span>${p.age} years</span> <span>${p.height} cm</span> <span>${p.weight} kg</span>
               <span class="player-pos">${p.role}</span>
               <span>${p.foot} Foot</span>
             </div>
@@ -399,137 +379,25 @@
           </div>
           <div class="stat-panels">
             <div class="stat-panel">
-              <div class="stat-title">TECHNICAL <span style="font-size:.97em;font-weight:700;color:#fff">${showStat(p.tec,12)}</span></div>
+              <div class="stat-title">TECHNICAL <span style="font-size:.97em;font-weight:700;color:#fff">${p.tec}</span></div>
               <ul class="stat-list">
-                ${statDefs.Technical.map((s,i)=>`<li>${s}<span class="${statClass(p.technical[i],12)}">${showStat(p.technical[i],12)}</span></li>`).join("")}
+                ${statDefs.Technical.map((s,i)=>`<li>${s}<span class="${statClass(p.technical[i],12)}">${p.technical[i]}</span></li>`).join("")}
               </ul>
             </div>
             <div class="stat-panel">
-              <div class="stat-title">MENTAL <span style="font-size:.97em;font-weight:700;color:#fff">${showStat(p.men,14)}</span></div>
+              <div class="stat-title">MENTAL <span style="font-size:.97em;font-weight:700;color:#fff">${p.men}</span></div>
               <ul class="stat-list">
-                ${statDefs.Mental.map((s,i)=>`<li>${s}<span class="${statClass(p.mental[i],14)}">${showStat(p.mental[i],14)}</span></li>`).join("")}
+                ${statDefs.Mental.map((s,i)=>`<li>${s}<span class="${statClass(p.mental[i],14)}">${p.mental[i]}</span></li>`).join("")}
               </ul>
             </div>
             <div class="stat-panel">
-              <div class="stat-title">PHYSICAL <span style="font-size:.97em;font-weight:700;color:#fff">${showStat(p.phy,13)}</span></div>
+              <div class="stat-title">PHYSICAL <span style="font-size:.97em;font-weight:700;color:#fff">${p.phy}</span></div>
               <ul class="stat-list">
-                ${statDefs.Physical.map((s,i)=>`<li>${s}<span class="${statClass(p.physical[i],13)}">${showStat(p.physical[i],13)}</span></li>`).join("")}
+                ${statDefs.Physical.map((s,i)=>`<li>${s}<span class="${statClass(p.physical[i],13)}">${p.physical[i]}</span></li>`).join("")}
               </ul>
             </div>
             ${p.type==="GK"?`
             <div class="stat-panel">
-              <div class="stat-title">GOALKEEPING <span style="font-size:.97em;font-weight:700;color:#fff">${showStat(Math.round(avg(p.goalkeeping)),12)}</span></div>
+              <div class="stat-title">GOALKEEPING <span style="font-size:.97em;font-weight:700;color:#fff">${Math.round((p.goalkeeping.reduce((a,b)=>a+b,0)/p.goalkeeping.length)||0)}</span></div>
               <ul class="stat-list">
-                ${statDefs.Goalkeeping.map((s,i)=>`<li>${s}<span class="${statClass(p.goalkeeping[i],12)}">${showStat(p.goalkeeping[i],12)}</span></li>`).join("")}
-              </ul>
-            </div>
-            `:""}
-          </div>
-        </div>
-      `;
-    }
-    function renderEditPanel(p, idx) {
-      return `
-        <div class="player-detail">
-          <div class="player-info">
-            <div class="player-name">${p.name}</div>
-            <div class="player-meta">
-              <span>${p.age} years</span> <span>${p.height} cm</span>
-              <span class="player-pos">${p.role}</span>
-              <span>${p.foot} Foot</span>
-            </div>
-            <span class="potential-hidden">Potential: ${p.potential}</span>
-          </div>
-          <div class="stat-panels">
-            <div class="stat-panel">
-              <div class="stat-title">TECHNICAL</div>
-              <ul class="stat-list">
-                ${statDefs.Technical.map((s,i)=>`<li>${s}<input class="stat-edit" type="number" min="${statRanges.Technical[0]}" max="${statRanges.Technical[1]}" value="${p.technical[i]}" data-group="Technical" data-stat="${i}" data-idx="${idx}"></li>`).join("")}
-              </ul>
-            </div>
-            <div class="stat-panel">
-              <div class="stat-title">MENTAL</div>
-              <ul class="stat-list">
-                ${statDefs.Mental.map((s,i)=>`<li>${s}<input class="stat-edit" type="number" min="${statRanges.Mental[0]}" max="${statRanges.Mental[1]}" value="${p.mental[i]}" data-group="Mental" data-stat="${i}" data-idx="${idx}"></li>`).join("")}
-              </ul>
-            </div>
-            <div class="stat-panel">
-              <div class="stat-title">PHYSICAL</div>
-              <ul class="stat-list">
-                ${statDefs.Physical.map((s,i)=>`<li>${s}<input class="stat-edit" type="number" min="${statRanges.Physical[0]}" max="${statRanges.Physical[1]}" value="${p.physical[i]}" data-group="Physical" data-stat="${i}" data-idx="${idx}"></li>`).join("")}
-              </ul>
-            </div>
-            ${p.type==="GK"?`
-            <div class="stat-panel">
-              <div class="stat-title">GOALKEEPING</div>
-              <ul class="stat-list">
-                ${statDefs.Goalkeeping.map((s,i)=>`<li>${s}<input class="stat-edit" type="number" min="${statRanges.Goalkeeping[0]}" max="${statRanges.Goalkeeping[1]}" value="${p.goalkeeping[i]}" data-group="Goalkeeping" data-stat="${i}" data-idx="${idx}"></li>`).join("")}
-              </ul>
-            </div>
-            `:""}
-          </div>
-          <div style="margin-left:40px;display:flex;align-items:center;">
-            <button class="save-btn" id="save-detail-btn">Save</button>
-          </div>
-        </div>
-      `;
-    }
-    function savePlayerEdits(idx) {
-      players[idx].editing=false;
-      // Update tec/men/phy averages after edit
-      players[idx].tec = Math.round(avg(players[idx].technical));
-      players[idx].men = Math.round(avg(players[idx].mental));
-      players[idx].phy = Math.round(avg(players[idx].physical));
-      updateTable();
-      updatePlayerDetail();
-      updateSummary();
-    }
-
-    // Summary stats
-    function avg(arr) { return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0; }
-    function updateSummary() {
-      let tTec=[], tMen=[], tPhy=[], tGk=[];
-      players.forEach(p=>{
-        tTec.push(...p.technical);
-        tMen.push(...p.mental);
-        tPhy.push(...p.physical);
-        if(p.type==="GK" && p.goalkeeping.length) tGk.push(...p.goalkeeping);
-      });
-      const sumBox = document.getElementById("stats-summary");
-      sumBox.innerHTML = `
-        <div class="stats-summary-box"><span class="stats-summary-label">TEC avg:</span> <span class="stats-summary-val">${(avg(tTec)||0).toFixed(2)}</span></div>
-        <div class="stats-summary-box"><span class="stats-summary-label">MEN avg:</span> <span class="stats-summary-val">${(avg(tMen)||0).toFixed(2)}</span></div>
-        <div class="stats-summary-box"><span class="stats-summary-label">PHY avg:</span> <span class="stats-summary-val">${(avg(tPhy)||0).toFixed(2)}</span></div>
-        <div class="stats-summary-box"><span class="stats-summary-label">GK avg:</span> <span class="stats-summary-val">${tGk.length?(avg(tGk)).toFixed(2):"-"}</span></div>
-      `;
-    }
-
-    // Search/filter
-    document.getElementById('search').addEventListener('input', function() {
-      searchText = this.value;
-      updateTable();
-    });
-    document.getElementById('pos-filter').addEventListener('change', function() {
-      posFilterVal = this.value;
-      updateTable();
-    });
-
-    // Buttons
-    document.getElementById('btn-generate').onclick = ()=>{
-      generateSquad();
-      updateSummary();
-    };
-    document.getElementById('btn-save').onclick = saveSquad;
-    document.getElementById('btn-load').onclick = loadSquad;
-    document.getElementById('btn-potential').onclick = function() {
-      showPotential = !showPotential;
-      this.innerText = showPotential ? "Hide Potential" : "Show Potential";
-      updatePlayerDetail();
-    };
-
-    // Init
-    generateSquad();
-    updateSummary();
-  </script>
-</body>
-</html>
+                ${statDefs.Goalkeeping.map((s,i)=>`<li>${s}<span class="${statClass(p.goalkeeping[i],12)}">${p.goalkeeping[i]}</span></li>`).
