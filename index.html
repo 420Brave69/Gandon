@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Brain-Rot Football Manager Generator</title>
+  <meta name="viewport" content="width=900">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; background: #20293b; color: #eaeaea; font-family: 'Inter', Arial, sans-serif; min-width: 900px;}
+    .header { background: linear-gradient(90deg, #4562b1 60%, #6096fd 100%); padding: 24px 0 16px 0; }
+    .header-content { max-width: 900px; margin: 0 auto; display:flex;align-items:center;}
+    .header-title { font-family: 'Montserrat', Arial, sans-serif; font-size: 1.75rem; font-weight: 700; color: #fff; letter-spacing:1.5px; text-shadow:0 2px 8px #2228;}
+    .header-actions { display: flex; gap: 12px; margin-left: auto;}
+    .header-actions button { font-size: 1rem; font-weight: 500; border: none; border-radius: 6px; padding: 8px 22px; cursor: pointer; outline:none; box-shadow:0 2px 8px #0002; transition: transform 0.15s, box-shadow 0.25s;}
+    .header-actions button.gen { background: #6096fd; color: #fff;}
+    .header-actions button.save { background: #ffd600; color: #222;}
+    .header-actions button.load { background: #6ccf80; color: #222;}
+    .header-actions button.potential { background: #e74c3c; color: #fff;}
+    .header-actions button:active { transform: scale(0.97);}
+    .header-actions button:hover { box-shadow:0 4px 16px #0003;}
+    .container { max-width: 900px; margin: 0 auto; padding-top: 18px;}
+    .players-table { width: 100%; border-collapse: collapse; background: #24315a; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 16px #0004;}
+    .players-table th, .players-table td { font-size: 1.03rem; text-align: left; padding: 10px 8px;}
+    .players-table th { background: #151c2c; color: #b0b8c8; font-weight: 600; transition: background 0.2s;}
+    .players-table tr { background: #212c47; border-bottom: 1px solid #2e3959; animation: fadeInRow 0.6s;}
+    .players-table tr.selected, .players-table tr:hover { background: linear-gradient(90deg,#27449d 80%, #6096fd 120%);}
+    .players-table td.name-cell { font-weight: bold;}
+    .players-table td.role-cell select { width: 185px; background: #26345a; color: #eaeaea; border: 1px solid #2e3959; border-radius: 4px; padding:3px 8px;}
+    .players-table .stat-highlight { color: #ffd600; font-weight: bold;}
+    .players-table .stat-low { color: #e74c3c; font-weight: 600;}
+    .player-detail { display: flex; gap: 28px; margin-top: 32px; background: #1a2030; border-radius: 14px; padding: 34px 38px 34px 36px; box-shadow: 0 8px 32px #0007; animation: popIn 0.7s;}
+    .player-info { flex: 0 0 260px;}
+    .player-name { font-family: 'Montserrat', Arial, sans-serif; font-weight: 700; font-size: 1.35em; color: #fff; letter-spacing:1px; margin-bottom:5px; text-shadow:0 2px 6px #0005;}
+    .player-meta { color: #b0b8c8; font-size: 1.07em; margin-bottom:5px;}
+    .player-pos { font-family: 'Montserrat', Arial, sans-serif; color: #ffd600; font-weight: 700;}
+    .stat-panels { flex: 1 1 0; display: flex; gap: 28px;}
+    .stat-panel { min-width: 155px; background: #212c47; border-radius: 9px; padding: 13px 18px 16px 14px; color: #fff; font-size: 1.01em; box-shadow: 0 2px 14px #0003; animation: fadeInPanel 0.7s;}
+    .stat-title { font-family: 'Montserrat', Arial, sans-serif; color: #ffd600; font-weight: 700; font-size: 1.13em; margin-bottom: 7px;}
+    .stat-list { list-style: none; margin: 0; padding: 0;}
+    .stat-list li { display: flex; justify-content: space-between;}
+    .stat-list .stat-highlight { color: #ffd600;}
+    .stat-list .stat-low { color: #e74c3c;}
+    .potential-hidden { display: none;}
+    .potential-shown .potential-hidden { display: inline; color: #e74c3c; font-weight: bold; margin-left: 10px;}
+    .search-row { display: flex; gap: 12px; margin-bottom: 15px;}
+    .search-bar { flex: 1 1 0; background: #26345a; border: 1.5px solid #2e3959; color: #eaeaea; font-size: 1.07rem; outline: none; border-radius: 5px; padding: 8px 14px; font-family: inherit;}
+    .dropdown { background: #26345a; border: 1.5px solid #2e3959; color: #eaeaea; border-radius: 5px; font-size: 1.07rem; padding: 8px 14px; font-family: inherit;}
+    .saved-toast {
+      position: fixed;
+      left: 50%; top: 28px; transform: translateX(-50%);
+      background: #ffd600; color: #212c47; font-weight:700; padding: 12px 36px;
+      border-radius: 7px; font-size: 1.12em; box-shadow:0 2px 10px #0007; z-index:999;
+      opacity: 0; pointer-events:none; transition: opacity .5s;
+      animation: fadeInOut 2.5s;
+    }
+    .saved-toast.show { opacity:1;}
+    @keyframes fadeInRow { from { opacity:0; transform:translateY(-18px);} to { opacity:1; transform:none; } }
+    @keyframes popIn { 0% { transform:scale(0.93) translateY(30px); opacity:0; } 100% { transform:none; opacity:1; } }
+    @keyframes fadeInPanel { from { opacity:0; transform:translateY(15px);} to { opacity:1; transform:none; } }
+    @keyframes fadeInOut {
+      0% { opacity: 0;}
+      10% { opacity: 1;}
+      85% { opacity: 1;}
+      100% { opacity: 0;}
+    }
+    @media (max-width: 900px) {
+      .player-detail { flex-direction: column; gap: 14px; padding: 16px 6px;}
+      .stat-panels { flex-direction: column; gap: 16px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-content">
+      <div>
+        <div class="header-title">Brain-Rot Football Manager Generator</div>
+        <div style="color:#b0b8c8;margin-bottom:8px;">Every roll, every position, every time. Lithuanian brain rot edition.</div>
+      </div>
+      <div class="header-actions">
+        <button class="gen" id="btn-generate">Generate New Squad</button>
+        <button class="save" id="btn-save">Save Squad</button>
+        <button class="load" id="btn-load">Load Squad</button>
+        <button class="potential" id="btn-potential">Show Potential</button>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="search-row">
+      <input class="search-bar" id="search" placeholder="Search players..." autocomplete="off">
+      <select class="dropdown" id="pos-filter">
+        <option value="All">All Roles</option>
+      </select>
+    </div>
+    <table class="players-table" id="players-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Age</th>
+          <th>Height</th>
+          <th>Foot</th>
+          <th>TEC</th>
+          <th>MEN</th>
+          <th>PHY</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+    <div id="player-detail"></div>
+  </div>
+  <div class="saved-toast" id="toast"></div>
+  <script>
+    // FM "brain rot" roles
+    const allRoles = [
+      "GK (D)", "Sweeper Keeper (D/S/A)",
+      "Central Defender (D/C/S)", "Ball-Playing Defender (D/C/S)", "Libero (S/A)",
+      "Fullback (D/S/A)", "Wingback (D/S/A)", "Inverted Wingback (D/S/A)", "No-Nonsense Fullback (D)",
+      "Defensive Midfielder (D/S)", "Anchor (D)", "Half-Back (D)", "Deep-Lying Playmaker (D/S)",
+      "Central Midfielder (D/S/A)", "Box-to-Box Midfielder (S)", "Advanced Playmaker (S/A)", "Mezzala (S/A)", "Carrilero (S)",
+      "Attacking Midfielder (S/A)", "Enganche (S)", "Shadow Striker (A)",
+      "Winger (S/A)", "Inverted Winger (S/A)", "Inside Forward (S/A)", "Wide Playmaker (S/A)", "Wide Target Forward (S/A)",
+      "Deep-Lying Forward (S/A)", "Advanced Forward (A)", "Target Forward (S/A)", "Poacher (A)", "Complete Forward (S/A)", "False Nine (S)"
+    ];
+
+    // Populate filter dropdown
+    const posFilter = document.getElementById('pos-filter');
+    allRoles.forEach(r=>{
+      let opt = document.createElement('option');
+      opt.value = r;
+      opt.textContent = r;
+      posFilter.appendChild(opt);
+    });
+
+    // Lithuanian "brain rot" name generator
+    const nameStart = ["Zlan", "Granga", "Drungu", "Zlangar", "Klangur", "Plangar", "Klun", "Vyt", "Kaz", "Ign"];
+    const nameMid = ["uh", "ri", "ra", "u", "a", "i", "o", "e", "y"];
+    const nameEnd = ["ras", "lanu", "praliri", "zralisu", "graluri", "zralala", "fralunu", "qralaku", "vraluri", "tanu"];
+    const surStart = ["Fral", "Gral", "Zra", "Pra", "Qra", "Vra", "Dra", "Pla", "Kla", "Tra"];
+    const surMid = ["l", "r", "n", "m", "v", "g", "z"];
+    const surEnd = ["unu", "uri", "liri", "salu", "laka", "rali", "nalu", "rala", "raku", "viri"];
+    function randomName() {
+      const fn = nameStart[Math.floor(Math.random()*nameStart.length)] +
+                nameMid[Math.floor(Math.random()*nameMid.length)] +
+                nameEnd[Math.floor(Math.random()*nameEnd.length)];
+      const sn = surStart[Math.floor(Math.random()*surStart.length)] +
+                surMid[Math.floor(Math.random()*surMid.length)] +
+                surEnd[Math.floor(Math.random()*surEnd.length)];
+      return `${fn} ${sn}`;
+    }
+
+    const statDefs = {
+      Technical: [
+        "Corners", "Crossing", "Dribbling", "Finishing", "First Touch", "Free Kick Taking", "Heading",
+        "Long Shots", "Long Throws", "Marking", "Passing", "Penalty Taking", "Tackling", "Technique"
+      ],
+      Mental: [
+        "Aggression", "Anticipation", "Bravery", "Composure", "Concentration", "Decisions",
+        "Determination", "Flair", "Leadership", "Off the Ball", "Positioning", "Teamwork",
+        "Vision", "Work Rate"
+      ],
+      Physical: [
+        "Acceleration", "Agility", "Balance", "Jumping Reach", "Natural Fitness", "Pace",
+        "Stamina", "Strength"
+      ]
+    };
+    const statRanges = {
+      Technical: [2,12],
+      Mental: [3,14],
+      Physical: [3,13]
+    };
+    function roll(min,max) { return Math.floor(Math.random()*(max-min+1))+min; }
+    function randomFoot() {
+      const t = roll(1,10);
+      return t === 1 ? "Both" : (t < 6 ? "Left" : "Right");
+    }
+    function statClass(val, max) {
+      if(val>=max-2) return "stat-highlight";
+      if(val<=Math.floor(max/3)) return "stat-low";
+      return "";
+    }
+
+    // Player generator: every roll every time!
+    function genPlayer() {
+      const role = allRoles[roll(0,allRoles.length-1)];
+      const age = roll(18,21), height = roll(150,190);
+      const tec = roll(statRanges.Technical[0], statRanges.Technical[1]);
+      const men = roll(statRanges.Mental[0], statRanges.Mental[1]);
+      const phy = roll(statRanges.Physical[0], statRanges.Physical[1]);
+      const technical = statDefs.Technical.map(()=>roll(statRanges.Technical[0], statRanges.Technical[1]));
+      const mental = statDefs.Mental.map(()=>roll(statRanges.Mental[0], statRanges.Mental[1]));
+      const physical = statDefs.Physical.map(()=>roll(statRanges.Physical[0], statRanges.Physical[1]));
+      const foot = randomFoot();
+      const potential = roll(100,180);
+      return {
+        name: randomName(),
+        age, height, role, tec, men, phy, technical, mental, physical, foot, potential
+      };
+    }
+
+    // Save/load from localStorage
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(()=>toast.classList.remove('show'),2000);
+    }
+    function saveSquad() {
+      localStorage.setItem("brainrotSquad",JSON.stringify(players));
+      showToast("Squad saved to your browser!");
+    }
+    function loadSquad() {
+      let d = localStorage.getItem("brainrotSquad");
+      if(!d) return showToast("No squad found to load!");
+      players = JSON.parse(d);
+      selectedIdx = 0;
+      updateTable();
+      updatePlayerDetail();
+      showToast("Squad loaded!");
+    }
+
+    // Data state
+    let players = [];
+    let selectedIdx = 0;
+    let showPotential = false;
+    let searchText = "";
+    let posFilterVal = "All";
+
+    function generateSquad() {
+      players = [];
+      for(let i=0;i<15;i++) players.push(genPlayer());
+      selectedIdx = 0;
+      updateTable();
+      updatePlayerDetail();
+    }
+
+    function updateTable() {
+      let filtered = players.map((p,i)=>({...p, idx:i}));
+      if(searchText) filtered = filtered.filter(p=>p.name.toLowerCase().includes(searchText.toLowerCase()));
+      if(posFilterVal && posFilterVal!=="All") filtered = filtered.filter(p=>p.role===posFilterVal);
+      const tbody = document.querySelector("#players-table tbody");
+      tbody.innerHTML = "";
+      filtered.forEach((p,idx)=>{
+        const isSel = (p.idx===selectedIdx);
+        tbody.innerHTML += `
+          <tr class="${isSel?"selected":""}" data-idx="${p.idx}">
+            <td class="name-cell">${p.name}</td>
+            <td class="role-cell">${makeRoleSelect(p.role,p.idx)}</td>
+            <td>${p.age}</td>
+            <td>${p.height}cm</td>
+            <td>${p.foot}</td>
+            <td class="${statClass(p.tec,12)}">${p.tec}</td>
+            <td class="${statClass(p.men,14)}">${p.men}</td>
+            <td class="${statClass(p.phy,13)}">${p.phy}</td>
+          </tr>
+        `;
+      });
+      // Row click selection
+      Array.from(tbody.querySelectorAll("tr")).forEach(row=>{
+        row.onclick = (evt)=>{
+          if(evt.target.tagName==="SELECT") return;
+          selectedIdx = Number(row.getAttribute("data-idx"));
+          updateTable();
+          updatePlayerDetail();
+        };
+      });
+      // Role change events
+      Array.from(document.querySelectorAll(".role-cell select")).forEach(sel=>{
+        sel.onchange = function() {
+          const idx = Number(this.getAttribute('data-idx'));
+          players[idx].role = this.value;
+          updateTable();
+          updatePlayerDetail();
+        }
+      });
+    }
+    function makeRoleSelect(selected,idx) {
+      let s = `<select data-idx="${idx}">`;
+      allRoles.forEach(r=>{
+        s += `<option value="${r}"${selected===r?' selected':''}>${r}</option>`;
+      });
+      return s+"</select>";
+    }
+    function updatePlayerDetail() {
+      const p = players[selectedIdx]||players[0];
+      if(!p) { document.getElementById('player-detail').innerHTML = ""; return; }
+      const pd = document.getElementById("player-detail");
+      pd.innerHTML = `
+        <div class="player-detail${showPotential?' potential-shown':''}">
+          <div class="player-info">
+            <div class="player-name">${p.name}</div>
+            <div class="player-meta">
+              <span>${p.age} years</span> <span>${p.height} cm</span>
+              <span class="player-pos">${p.role}</span>
+              <span>${p.foot} Foot</span>
+            </div>
+            <span class="potential-hidden">Potential: ${p.potential}</span>
+          </div>
+          <div class="stat-panels">
+            <div class="stat-panel">
+              <div class="stat-title">TECHNICAL <span style="font-size:.97em;font-weight:700;color:#fff">${p.tec}</span></div>
+              <ul class="stat-list">
+                ${statDefs.Technical.map((s,i)=>`<li>${s}<span class="${statClass(p.technical[i],12)}">${p.technical[i]}</span></li>`).join("")}
+              </ul>
+            </div>
+            <div class="stat-panel">
+              <div class="stat-title">MENTAL <span style="font-size:.97em;font-weight:700;color:#fff">${p.men}</span></div>
+              <ul class="stat-list">
+                ${statDefs.Mental.map((s,i)=>`<li>${s}<span class="${statClass(p.mental[i],14)}">${p.mental[i]}</span></li>`).join("")}
+              </ul>
+            </div>
+            <div class="stat-panel">
+              <div class="stat-title">PHYSICAL <span style="font-size:.97em;font-weight:700;color:#fff">${p.phy}</span></div>
+              <ul class="stat-list">
+                ${statDefs.Physical.map((s,i)=>`<li>${s}<span class="${statClass(p.physical[i],13)}">${p.physical[i]}</span></li>`).join("")}
+              </ul>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Search/filter events
+    document.getElementById('search').addEventListener('input', function() {
+      searchText = this.value;
+      updateTable();
+    });
+    document.getElementById('pos-filter').addEventListener('change', function() {
+      posFilterVal = this.value;
+      updateTable();
+    });
+
+    // Buttons
+    document.getElementById('btn-generate').onclick = generateSquad;
+    document.getElementById('btn-save').onclick = saveSquad;
+    document.getElementById('btn-load').onclick = loadSquad;
+    document.getElementById('btn-potential').onclick = function() {
+      showPotential = !showPotential;
+      this.innerText = showPotential ? "Hide Potential" : "Show Potential";
+      updatePlayerDetail();
+    };
+
+    // Init
+    generateSquad();
+  </script>
+</body>
+</html>
