@@ -235,6 +235,14 @@
       Physical: [3,13],
       Goalkeeping: [2,12]
     };
+    // Special stat rolling for some stats
+    const specialRolls = {
+      // statName: [min, max]
+      "Dirtiness": [3,8],
+      "Injury": [3,8],
+      "Determination": [9,15],
+      "Important Match": [9,15]
+    };
     function avg(arr) { return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0; }
     function statToStars(val) {
       if (val < 3) return 1;
@@ -283,7 +291,6 @@
       const t = roll(1,10);
       return t === 1 ? "Both" : (t < 6 ? "Left" : "Right");
     }
-
     // --- Potential range selection ---
     let potRangeMin = 140, potRangeMax = 145;
     document.addEventListener('DOMContentLoaded', function() {
@@ -299,8 +306,7 @@
       });
       updatePotRange();
     });
-
-    // --- SQUAD GENERATION with best potential logic ---
+    // --- SQUAD GENERATION with best potential logic and special stat rolling ---
     function generateSquad() {
       let used = {}, usedNames = new Set();
       function pickRole(type) {
@@ -349,13 +355,26 @@
       const nobj = randomUniqueName(usedNames);
       const name = nobj.full, fn = nobj.fn, sn = nobj.sn;
       const age = roll(18,21), height = roll(150,190), weight = roll(50,95);
-      const tec = roll(statRanges.Technical[0], statRanges.Technical[1]);
-      const men = roll(statRanges.Mental[0], statRanges.Mental[1]);
-      const phy = roll(statRanges.Physical[0], statRanges.Physical[1]);
-      const technical = statDefs.Technical.map(()=>roll(statRanges.Technical[0], statRanges.Technical[1]));
-      const mental = statDefs.Mental.map(()=>roll(statRanges.Mental[0], statRanges.Mental[1]));
-      const physical = statDefs.Physical.map(()=>roll(statRanges.Physical[0], statRanges.Physical[1]));
+      // Technical: normal except Versatility (same as base)
+      const technical = statDefs.Technical.map((s, i) => {
+        if (s === "Versatility") return roll(statRanges.Technical[0], statRanges.Technical[1]);
+        return roll(statRanges.Technical[0], statRanges.Technical[1]);
+      });
+      // Mental: Determination (9-15), Dirtiness (3-8), Important Match (9-15), rest normal
+      const mental = statDefs.Mental.map((s, i) => {
+        if (s === "Determination" || s === "Important Match") return roll(9, 15);
+        if (s === "Dirtiness") return roll(3, 8);
+        return roll(statRanges.Mental[0], statRanges.Mental[1]);
+      });
+      // Physical: Injury (3-8), rest normal
+      const physical = statDefs.Physical.map((s, i) => {
+        if (s === "Injury") return roll(3, 8);
+        return roll(statRanges.Physical[0], statRanges.Physical[1]);
+      });
       const goalkeeping = type==="GK" ? statDefs.Goalkeeping.map(()=>roll(statRanges.Goalkeeping[0],statRanges.Goalkeeping[1])) : [];
+      const tec = avg(technical);
+      const men = avg(mental);
+      const phy = avg(physical);
       const foot = randomFoot();
       return {
         name, fn, sn, age, height, weight, role, type, tec, men, phy, technical, mental, physical, foot, potential: 0, goalkeeping
