@@ -62,6 +62,9 @@
     .search-row { display: flex; gap: 12px; margin-bottom: 15px;}
     .search-bar { flex: 1 1 0; background: var(--purple-mid); border: 1.5px solid var(--purple-accent); color: var(--purple-light); font-size: 1.07rem; outline: none; border-radius: 5px; padding: 8px 14px; font-family: inherit;}
     .dropdown { background: var(--purple-mid); border: 1.5px solid var(--purple-accent); color: var(--purple-light); border-radius: 5px; font-size: 1.07rem; padding: 8px 14px; font-family: inherit;}
+    .pot-range-row { display: flex; align-items: center; gap: 18px; margin: 12px 0 10px 0; }
+    .pot-range-label { color: var(--purple-light); font-weight: 700; font-family: 'Montserrat', Arial, sans-serif; }
+    .pot-range-select { background: var(--purple-mid); border: 1.5px solid var(--purple-accent); color: var(--purple-light); border-radius: 5px; font-size: 1.07rem; padding: 7px 16px; font-family: inherit;}
     .saved-toast {
       position: fixed;
       left: 50%; top: 28px; transform: translateX(-50%);
@@ -128,6 +131,14 @@
     </div>
   </div>
   <div class="container">
+    <div class="pot-range-row">
+      <span class="pot-range-label">Squad Potential Avg Range:</span>
+      <select class="pot-range-select" id="pot-range-select">
+        <option value="120-130">120-130</option>
+        <option value="130-135">130-135</option>
+        <option value="140-145" selected>140-145</option>
+      </select>
+    </div>
     <div class="stats-summary" id="stats-summary"></div>
     <div id="attribute-bars"></div>
     <div style="text-align:center;color:#b785fd;margin:12px 0 0;font-size:1.1em;">
@@ -202,16 +213,16 @@
     const statDefs = {
       Technical: [
         "Corners", "Crossing", "Dribbling", "Finishing", "First Touch", "Free Kick Taking", "Heading",
-        "Long Shots", "Long Throws", "Marking", "Passing", "Penalty Taking", "Tackling", "Technique"
+        "Long Shots", "Long Throws", "Marking", "Passing", "Penalty Taking", "Tackling", "Technique", "Versatility"
       ],
       Mental: [
         "Aggression", "Anticipation", "Bravery", "Composure", "Concentration", "Decisions",
         "Determination", "Flair", "Leadership", "Off the Ball", "Positioning", "Teamwork",
-        "Vision", "Work Rate"
+        "Vision", "Work Rate", "Consistency", "Dirtiness", "Important Match"
       ],
       Physical: [
         "Acceleration", "Agility", "Balance", "Jumping Reach", "Natural Fitness", "Pace",
-        "Stamina", "Strength"
+        "Stamina", "Strength", "Injury"
       ],
       Goalkeeping: [
         "Aerial Reach", "Command of Area", "Communication", "Eccentricity", "Handling", "Kicking", "One on Ones",
@@ -272,6 +283,23 @@
       const t = roll(1,10);
       return t === 1 ? "Both" : (t < 6 ? "Left" : "Right");
     }
+
+    // --- Potential range selection ---
+    let potRangeMin = 140, potRangeMax = 145;
+    document.addEventListener('DOMContentLoaded', function() {
+      const potSel = document.getElementById('pot-range-select');
+      function updatePotRange() {
+        const val = potSel.value;
+        const [min, max] = val.split('-').map(Number);
+        potRangeMin = min; potRangeMax = max;
+      }
+      potSel.addEventListener('change', function() {
+        updatePotRange();
+        generateSquad();
+      });
+      updatePotRange();
+    });
+
     // --- SQUAD GENERATION with best potential logic ---
     function generateSquad() {
       let used = {}, usedNames = new Set();
@@ -297,20 +325,20 @@
           let s = statToStars(avg(squad[i].technical)) + statToStars(avg(squad[i].mental)) + statToStars(avg(squad[i].physical));
           if (s > bestStars) { bestStars = s; bestIdx = i; }
         }
-        // assign best potential to best player, rest random but avg 140-145
+        // assign best potential to best player, rest random but avg in selected range
         let restTotal = 0;
         for (let i=0; i<squad.length; ++i) {
           if (i === bestIdx) continue;
-          squad[i].potential = roll(100,175);
+          squad[i].potential = roll(100,180);
           restTotal += squad[i].potential;
         }
-        // Now set best so avg 140-145
-        let bestPot = Math.round(140*squad.length - restTotal);
+        // Now set best so avg in selected range
+        let bestPot = Math.round(potRangeMin*squad.length - restTotal);
         if (bestPot < 150) bestPot = 150;
         if (bestPot > 180) bestPot = 180;
         squad[bestIdx].potential = bestPot;
         avgPot = avg(squad.map(p=>p.potential));
-      } while (avgPot < 140 || avgPot > 145);
+      } while (avgPot < potRangeMin || avgPot > potRangeMax);
       players = squad;
       selectedIdx = 0;
       updateTable();
