@@ -3,47 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <title>Brain-Rot Football Manager Generator</title>
-  <meta name="viewport" content="width=900">
+  <meta name="viewport" content="width=1100">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    body { margin: 0; background: #191026; color: #e0d7f8; font-family: 'Inter', Arial, sans-serif; min-width: 900px;}
+    :root {
+      --purple-bg: #191026;
+      --purple-dark: #23143b;
+      --purple-mid: #25123a;
+      --purple-accent: #6e49d0;
+      --purple-accent2: #b785fd;
+      --purple-light: #c9a0ff;
+      --star-gold: #ffcb52;
+      --star-grey: #4e415e;
+      --star-purple: #b785fd;
+      --star-purple2: #6e49d0;
+      --white: #fff;
+    }
+    body { margin: 0; background: var(--purple-bg); color: #e0d7f8; font-family: 'Inter', Arial, sans-serif; min-width: 900px;}
     .header { background: linear-gradient(90deg, #2a134a 50%, #6e49d0 100%); padding: 24px 0 16px 0; }
-    .header-content { max-width: 900px; margin: 0 auto; display:flex;align-items:center;}
+    .header-content { max-width: 1100px; margin: 0 auto; display:flex;align-items:center;}
     .header-title { font-family: 'Montserrat', Arial, sans-serif; font-size: 1.75rem; font-weight: 700; color: #fff; letter-spacing:1.5px; text-shadow:0 2px 8px #2228;}
     .header-actions { display: flex; gap: 12px; margin-left: auto;}
     .header-actions button { font-size: 1rem; font-weight: 500; border: none; border-radius: 6px; padding: 8px 22px; cursor: pointer; outline:none; box-shadow:0 2px 8px #0002; transition: transform 0.15s, box-shadow 0.25s;}
-    .header-actions button.gen { background: #6e49d0; color: #fff;}
+    .header-actions button.gen { background: var(--purple-accent); color: #fff;}
     .header-actions button.save { background: #d9a6ff; color: #2a134a;}
     .header-actions button.load { background: #b785fd; color: #2a134a;}
     .header-actions button.potential { background: #b01ad9; color: #fff;}
     .header-actions button:active { transform: scale(0.97);}
     .header-actions button:hover { box-shadow:0 4px 16px #6e49d044;}
-    .container { max-width: 900px; margin: 0 auto; padding-top: 18px;}
-    .players-table { width: 100%; border-collapse: collapse; background: #23143b; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 16px #0004;}
+    .container { max-width: 1100px; margin: 0 auto; padding-top: 18px;}
+    .players-table { width: 100%; border-collapse: collapse; background: var(--purple-dark); border-radius: 10px; overflow: hidden; box-shadow: 0 2px 16px #0004;}
     .players-table th, .players-table td { font-size: 1.03rem; text-align: left; padding: 10px 8px;}
-    .players-table th { background: #25123a; color: #c9a0ff; font-weight: 600; transition: background 0.2s;}
-    .players-table tr { background: #191026; border-bottom: 1px solid #331c55; animation: fadeInRow 0.6s;}
-    .players-table tr.selected, .players-table tr:hover { background: linear-gradient(90deg,#33136d 80%, #6e49d0 120%);}
+    .players-table th { background: var(--purple-mid); color: var(--purple-light); font-weight: 600; transition: background 0.2s;}
+    .players-table tr { background: var(--purple-bg); border-bottom: 1px solid #331c55; animation: fadeInRow 0.6s;}
+    .players-table tr.selected, .players-table tr:hover { background: linear-gradient(90deg,#33136d 80%, var(--purple-accent) 120%);}
     .players-table td.name-cell { font-weight: bold;}
-    .players-table td.role-cell { color: #a37aff;}
+    .players-table td.role-cell { color: var(--purple-accent);}
+    .players-table .stat-stars { font-size: 1.15em; letter-spacing: 0; }
+    .players-table .star { color: var(--star-purple); text-shadow: 0 1px 4px #000b;}
+    .players-table .star-half { color: var(--star-purple2);}
+    .players-table .star-grey { color: var(--star-grey);}
     .players-table .stat-highlight { color: #c287ff; font-weight: bold;}
     .players-table .stat-low { color: #ff50a9; font-weight: 600;}
-    .rainbow-glow {
-      background: linear-gradient(90deg, #FF0080, #7928CA, #0070F3, #00FFAE, #FFCB00, #FF0080);
-      background-size: 300% 300%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      color: transparent;
-      animation: rainbow 2.7s linear infinite;
-      font-weight: bold;
-      text-shadow: 0 0 8px #fff, 0 0 16px #ffbaff;
-    }
-    @keyframes rainbow {
-      0% {background-position:0% 50%;}
-      50% {background-position:100% 50%;}
-      100% {background-position:0% 50%;}
-    }
-    .player-detail { display: flex; gap: 28px; margin-top: 32px; background: #23143b; border-radius: 14px; padding: 34px 38px 34px 36px; box-shadow: 0 8px 32px #2a134a88; animation: popIn 0.7s;}
+    .player-detail { display: flex; gap: 28px; margin-top: 32px; background: var(--purple-dark); border-radius: 14px; padding: 34px 38px 34px 36px; box-shadow: 0 8px 32px #2a134a88; animation: popIn 0.7s;}
     .player-info { flex: 0 0 260px;}
     .player-name { font-family: 'Montserrat', Arial, sans-serif; font-weight: 700; font-size: 1.35em; color: #fff; letter-spacing:1px; margin-bottom:5px; text-shadow:0 2px 6px #0005;}
     .player-meta { color: #c9a0ff; font-size: 1.07em; margin-bottom:5px;}
@@ -56,24 +58,24 @@
     .stat-list li { display: flex; justify-content: space-between;}
     .stat-list .stat-highlight { color: #c287ff;}
     .stat-list .stat-low { color: #ff50a9;}
+    .stats-summary {display:flex; gap:32px; margin:28px 0 8px 0; font-size:1.08em;}
+    .stats-summary-box {background:var(--purple-dark); border-radius:8px; padding:12px 22px;}
+    .stats-summary-label {color:var(--purple-light);font-weight:700;}
+    .stats-summary-val {margin-left:6px; font-weight:700;}
     .potential-hidden { display: none;}
     .potential-shown .potential-hidden { display: inline; color: #ff43d1; font-weight: bold; margin-left: 10px;}
     .search-row { display: flex; gap: 12px; margin-bottom: 15px;}
-    .search-bar { flex: 1 1 0; background: #25123a; border: 1.5px solid #6e49d0; color: #c9a0ff; font-size: 1.07rem; outline: none; border-radius: 5px; padding: 8px 14px; font-family: inherit;}
-    .dropdown { background: #25123a; border: 1.5px solid #6e49d0; color: #c9a0ff; border-radius: 5px; font-size: 1.07rem; padding: 8px 14px; font-family: inherit;}
+    .search-bar { flex: 1 1 0; background: var(--purple-mid); border: 1.5px solid var(--purple-accent); color: var(--purple-light); font-size: 1.07rem; outline: none; border-radius: 5px; padding: 8px 14px; font-family: inherit;}
+    .dropdown { background: var(--purple-mid); border: 1.5px solid var(--purple-accent); color: var(--purple-light); border-radius: 5px; font-size: 1.07rem; padding: 8px 14px; font-family: inherit;}
     .saved-toast {
       position: fixed;
       left: 50%; top: 28px; transform: translateX(-50%);
-      background: #6e49d0; color: #fff; font-weight:700; padding: 12px 36px;
+      background: var(--purple-accent); color: #fff; font-weight:700; padding: 12px 36px;
       border-radius: 7px; font-size: 1.12em; box-shadow:0 2px 10px #2a134a88; z-index:999;
       opacity: 0; pointer-events:none; transition: opacity .5s;
       animation: fadeInOut 2.5s;
     }
     .saved-toast.show { opacity:1;}
-    .stats-summary {display:flex; gap:32px; margin:28px 0 8px 0; font-size:1.08em;}
-    .stats-summary-box {background:#23143b; border-radius:8px; padding:12px 22px;}
-    .stats-summary-label {color:#d9a6ff;font-weight:700;}
-    .stats-summary-val {margin-left:6px; font-weight:700;}
     @keyframes fadeInRow { from { opacity:0; transform:translateY(-18px);} to { opacity:1; transform:none; } }
     @keyframes popIn { 0% { transform:scale(0.93) translateY(30px); opacity:0; } 100% { transform:none; opacity:1; } }
     @keyframes fadeInPanel { from { opacity:0; transform:translateY(15px);} to { opacity:1; transform:none; } }
@@ -83,10 +85,71 @@
       85% { opacity: 1;}
       100% { opacity: 0;}
     }
-    @media (max-width: 900px) {
-      .player-detail { flex-direction: column; gap: 14px; padding: 16px 6px;}
-      .stat-panels { flex-direction: column; gap: 16px;}
-      .stats-summary { flex-direction:column; gap:12px;}
+    .pitch-wrap { width: 600px; margin:36px auto 18px auto; }
+    .pitch {
+      background: linear-gradient(180deg, #23143b 0%, #191026 100%);
+      border: 4px solid var(--purple-accent);
+      border-radius: 20px;
+      width: 100%;
+      height: 570px;
+      position: relative;
+      margin: 0 auto;
+      box-shadow: 0 6px 38px #0006;
+    }
+    .pitch .line { position: absolute; background: rgba(255,255,255,0.15);}
+    .pitch .halfway { width:100%; height:4px; top:50%; left:0; }
+    .pitch .penalty { width:90%; height:4px; top:87%; left:5%;}
+    .pitch .goal { width:30%; height:4px; top:97.3%; left:35%;}
+    .pitch .circle { border: 2.5px solid #fff9; border-radius: 50%; width: 70px; height: 70px; position: absolute; top: 46.5%; left:calc(50% - 35px);}
+    .pitch-player {
+      position: absolute;
+      width: 130px;
+      height: 110px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content: flex-end;
+      gap: 0;
+      padding-top: 18px;
+      padding-bottom: 12px;
+      left: 0;
+      top: 0;
+    }
+    .pitch-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--purple-accent2);
+      border: 3.5px solid var(--purple-accent);
+      box-shadow: 0 2px 12px #0007;
+      margin: 0 auto 0 auto;
+      display: block;
+    }
+    .pitch-player .pitch-name {
+      font-family:'Montserrat',sans-serif;
+      margin-top: 18px;
+      padding: 4px 10px 4px 10px;
+      border-radius: 8px;
+      background: var(--purple-mid);
+      color: var(--white);
+      font-weight: 700;
+      font-size: 1.12em;
+      letter-spacing: 0.5px;
+      min-width: 50px;
+      max-width: 100px;
+      overflow-wrap: break-word;
+      word-break: break-all;
+      box-shadow: 0 1px 7px #0002;
+      text-align:center;
+      display:inline-block;
+    }
+    .stats-summary {display:flex; gap:32px; margin:28px 0 8px 0; font-size:1.08em;}
+    .stats-summary-box {background:var(--purple-dark); border-radius:8px; padding:12px 22px;}
+    .stats-summary-label {color:var(--purple-light);font-weight:700;}
+    .stats-summary-val {margin-left:6px; font-weight:700;}
+    @media (max-width: 1100px) {
+      .container, .header-content { max-width: 100vw; }
+      .pitch-wrap { width: 99vw; }
     }
   </style>
 </head>
@@ -95,7 +158,7 @@
     <div class="header-content">
       <div>
         <div class="header-title">Brain-Rot Football Manager Generator</div>
-        <div style="color:#b0b8c8;margin-bottom:8px;">Balanced Lithuanian meme squad, every player unique.</div>
+        <div style="color:#b0b8c8;margin-bottom:8px;">Big meme squad, accurate stars, and 1-4-4-2 best XI!</div>
       </div>
       <div class="header-actions">
         <button class="gen" id="btn-generate">Generate Squad</button>
@@ -107,6 +170,17 @@
   </div>
   <div class="container">
     <div class="stats-summary" id="stats-summary"></div>
+    <div class="pitch-wrap">
+      <div class="pitch" id="pitch">
+        <div class="line halfway"></div>
+        <div class="line penalty"></div>
+        <div class="line goal"></div>
+        <div class="circle"></div>
+      </div>
+      <div style="text-align:center;color:#b785fd;margin:12px 0 0;font-size:1.1em;">
+        <span id="avg-pot"></span>
+      </div>
+    </div>
     <div class="search-row">
       <input class="search-bar" id="search" placeholder="Search players..." autocomplete="off">
       <select class="dropdown" id="pos-filter">
@@ -132,6 +206,7 @@
           <th>MEN</th>
           <th>PHY</th>
           <th>GK</th>
+          <th>POT</th>
         </tr>
       </thead>
       <tbody>
@@ -141,23 +216,7 @@
   </div>
   <div class="saved-toast" id="toast"></div>
   <script>
-    const roles = [
-      // GK
-      {role:"GK (D)", type:"GK"}, {role:"Sweeper Keeper (D/S/A)", type:"GK"},
-      // DEF
-      {role:"Central Defender (D/C/S)", type:"DEF"}, {role:"Ball-Playing Defender (D/C/S)", type:"DEF"}, {role:"Libero (S/A)", type:"DEF"},
-      {role:"Fullback (D/S/A)", type:"DEF"}, {role:"Wingback (D/S/A)", type:"DEF"}, {role:"Inverted Wingback (D/S/A)", type:"DEF"}, {role:"No-Nonsense Fullback (D)", type:"DEF"},
-      // MID
-      {role:"Defensive Midfielder (D/S)", type:"MID"}, {role:"Anchor (D)", type:"MID"}, {role:"Half-Back (D)", type:"MID"}, {role:"Deep-Lying Playmaker (D/S)", type:"MID"},
-      {role:"Central Midfielder (D/S/A)", type:"MID"}, {role:"Box-to-Box Midfielder (S)", type:"MID"}, {role:"Advanced Playmaker (S/A)", type:"MID"}, {role:"Mezzala (S/A)", type:"MID"}, {role:"Carrilero (S)", type:"MID"},
-      {role:"Attacking Midfielder (S/A)", type:"MID"}, {role:"Enganche (S)", type:"MID"}, {role:"Shadow Striker (A)", type:"MID"},
-      // ATT
-      {role:"Winger (S/A)", type:"ATT"}, {role:"Inverted Winger (S/A)", type:"ATT"}, {role:"Inside Forward (S/A)", type:"ATT"}, {role:"Wide Playmaker (S/A)", type:"ATT"}, {role:"Wide Target Forward (S/A)", type:"ATT"},
-      {role:"Deep-Lying Forward (S/A)", type:"ATT"}, {role:"Advanced Forward (A)", type:"ATT"}, {role:"Target Forward (S/A)", type:"ATT"}, {role:"Poacher (A)", type:"ATT"}, {role:"Complete Forward (S/A)", type:"ATT"}, {role:"False Nine (S)", type:"ATT"}
-    ];
-    const allRoles = roles.map(r=>r.role);
-
-    // Only use these names/surnames, rare ones for rarity logic
+    // names
     const firstNames = [
       "Kostė", "Arnas", "Saldus", "Negras", "Cumbuketas", "Skibidas", "Rizardas", "Fanumas", "Gufis", "Livis", "Neonas",
       "Zestas", "Sasis", "Gleizas", "Mogas", "Ohajas", "Ožys", "Simpas", "Griozdas",
@@ -174,42 +233,22 @@
       "Liesbietis", "Sliukonas", "Tuntuhas", "Drekintuvas", "Prostitutas", "Ciulpikas", "Gejutraukis", "Alkapone", "Trapezoidas"
     ];
     const rareSurnames = ["Samsonas"];
-
-    function randomUniqueName(usedNames) {
-      let tries = 0;
-      let isRare = false;
-      let fn, sn;
-      while (tries++ < 1000) {
-        let useRareFirst = (Math.random() < 1/25);
-        let useRareSurname = (Math.random() < 1/25);
-
-        if (useRareFirst) {
-          fn = rareFirstNames[0];
-        } else {
-          fn = firstNames[Math.floor(Math.random()*firstNames.length)];
-        }
-        if (useRareSurname) {
-          sn = rareSurnames[0];
-        } else {
-          sn = surnames[Math.floor(Math.random()*surnames.length)];
-        }
-        if (fn === rareFirstNames[0] || sn === rareSurnames[0]) isRare = true;
-
-        const full = fn + " " + sn;
-        if (!usedNames.has(full)) {
-          usedNames.add(full);
-          return {full, fn, sn, isRare};
-        }
-      }
-      // fallback if somehow all combinations are used
-      return {full: "Brr Brr Patapimas", fn: "Brr Brr", sn: "Patapimas", isRare: false};
-    }
-
-    function roll(min,max) { return Math.floor(Math.random()*(max-min+1))+min; }
-    function randomFoot() {
-      const t = roll(1,10);
-      return t === 1 ? "Both" : (t < 6 ? "Left" : "Right");
-    }
+    // roles and squad
+    const roles = [
+      // GK
+      {role:"GK (D)", type:"GK"}, {role:"Sweeper Keeper (D/S/A)", type:"GK"},
+      // DEF
+      {role:"Central Defender (D/C/S)", type:"DEF"}, {role:"Ball-Playing Defender (D/C/S)", type:"DEF"}, {role:"Libero (S/A)", type:"DEF"},
+      {role:"Fullback (D/S/A)", type:"DEF"}, {role:"Wingback (D/S/A)", type:"DEF"}, {role:"Inverted Wingback (D/S/A)", type:"DEF"}, {role:"No-Nonsense Fullback (D)", type:"DEF"},
+      // MID
+      {role:"Defensive Midfielder (D/S)", type:"MID"}, {role:"Anchor (D)", type:"MID"}, {role:"Half-Back (D)", type:"MID"}, {role:"Deep-Lying Playmaker (D/S)", type:"MID"},
+      {role:"Central Midfielder (D/S/A)", type:"MID"}, {role:"Box-to-Box Midfielder (S)", type:"MID"}, {role:"Advanced Playmaker (S/A)", type:"MID"}, {role:"Mezzala (S/A)", type:"MID"}, {role:"Carrilero (S)", type:"MID"},
+      {role:"Attacking Midfielder (S/A)", type:"MID"}, {role:"Enganche (S)", type:"MID"}, {role:"Shadow Striker (A)", type:"MID"},
+      // ATT
+      {role:"Winger (S/A)", type:"ATT"}, {role:"Inverted Winger (S/A)", type:"ATT"}, {role:"Inside Forward (S/A)", type:"ATT"}, {role:"Wide Playmaker (S/A)", type:"ATT"}, {role:"Wide Target Forward (S/A)", type:"ATT"},
+      {role:"Deep-Lying Forward (S/A)", type:"ATT"}, {role:"Advanced Forward (A)", type:"ATT"}, {role:"Target Forward (S/A)", type:"ATT"}, {role:"Poacher (A)", type:"ATT"}, {role:"Complete Forward (S/A)", type:"ATT"}, {role:"False Nine (S)", type:"ATT"}
+    ];
+    // attribute ranges
     const statDefs = {
       Technical: [
         "Corners", "Crossing", "Dribbling", "Finishing", "First Touch", "Free Kick Taking", "Heading",
@@ -235,15 +274,57 @@
       Physical: [3,13],
       Goalkeeping: [2,12]
     };
+    // star conversion
+    function avg(arr) { return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0; }
+    function statToStars(val) {
+      if (val < 3) return 1;
+      if (val < 5) return 1.5;
+      if (val < 7) return 2;
+      if (val < 9) return 2.5;
+      if (val < 11) return 3;
+      if (val < 13) return 3.5;
+      if (val < 15) return 4;
+      if (val < 17) return 4.5;
+      return 5;
+    }
+    function starsHTML(n) {
+      let html = "";
+      let full = Math.floor(n), half = (n % 1 >= 0.5);
+      for (let i=0;i<full;i++) html += `<span class="star">&#9733;</span>`;
+      if (half) html += `<span class="star-half">&#9733;</span>`;
+      for (let i=full+half;i<5;i++) html += `<span class="star-grey">&#9733;</span>`;
+      return `<span class="stat-stars">${html}</span>`;
+    }
     function statClass(val, max) {
       if(val>=max-2) return "stat-highlight";
       if(val<=Math.floor(max/3)) return "stat-low";
       return "";
     }
-    function getRoleType(role) {
-      let o = roles.find(r=>r.role===role);
-      return o ? o.type : "MID";
+    // names logic
+    function randomUniqueName(usedNames) {
+      let tries = 0;
+      let fn, sn;
+      while (tries++ < 1000) {
+        let useRareFirst = (Math.random() < 1/33);
+        let useRareSurname = (Math.random() < 1/33);
+        if (useRareFirst) fn = rareFirstNames[0];
+        else fn = firstNames[Math.floor(Math.random()*firstNames.length)];
+        if (useRareSurname) sn = rareSurnames[0];
+        else sn = surnames[Math.floor(Math.random()*surnames.length)];
+        const key = fn+" "+sn;
+        if (!usedNames.has(key)) {
+          usedNames.add(key);
+          return {full: key, fn, sn};
+        }
+      }
+      return {full: "Brr Brr Patapimas", fn: "Brr Brr", sn: "Patapimas"};
     }
+    function roll(min,max) { return Math.floor(Math.random()*(max-min+1))+min; }
+    function randomFoot() {
+      const t = roll(1,10);
+      return t === 1 ? "Both" : (t < 6 ? "Left" : "Right");
+    }
+    // squad generation
     function generateSquad() {
       let used = {}, usedNames = new Set();
       function pickRole(type) {
@@ -253,15 +334,21 @@
         used[r.role]=true;
         return r.role;
       }
-      let squad = [];
-      squad.push(genPlayer(pickRole("GK"),"GK",usedNames));
-      for(let i=0;i<5;i++) squad.push(genPlayer(pickRole("DEF"),"DEF",usedNames));
-      for(let i=0;i<5;i++) squad.push(genPlayer(pickRole("MID"),"MID",usedNames));
-      for(let i=0;i<4;i++) squad.push(genPlayer(pickRole("ATT"),"ATT",usedNames));
+      let squad, avgPot;
+      do {
+        squad = [];
+        used = {}; usedNames = new Set();
+        squad.push(genPlayer(pickRole("GK"),"GK",usedNames));
+        for(let i=0;i<7;i++) squad.push(genPlayer(pickRole("DEF"),"DEF",usedNames));
+        for(let i=0;i<6;i++) squad.push(genPlayer(pickRole("MID"),"MID",usedNames));
+        for(let i=0;i<5;i++) squad.push(genPlayer(pickRole("ATT"),"ATT",usedNames));
+        avgPot = avg(squad.map(p=>p.potential));
+      } while (avgPot < 140 || avgPot > 145);
       players = squad;
       selectedIdx = 0;
       updateTable();
       updatePlayerDetail();
+      updatePitch();
       updateSummary();
     }
     function genPlayer(role,type,usedNames) {
@@ -277,15 +364,181 @@
       const goalkeeping = type==="GK" ? statDefs.Goalkeeping.map(()=>roll(statRanges.Goalkeeping[0],statRanges.Goalkeeping[1])) : [];
       const foot = randomFoot();
       const potential = roll(100,180);
-      let gender = "♂";
-      let rainbow = false;
-      if(fn === "Titas" || sn === "Samsonas") {
-        gender = "Gay";
-        rainbow = true;
-      }
       return {
-        name, fn, sn, age, height, weight, role, type, tec, men, phy, technical, mental, physical, foot, potential, goalkeeping, gender, rainbow
+        name, fn, sn, age, height, weight, role, type, tec, men, phy, technical, mental, physical, foot, potential, goalkeeping
       };
+    }
+    // table
+    let players = [];
+    let selectedIdx = 0;
+    let showPotential = false;
+    let searchText = "";
+    let posFilterVal = "All";
+    function updateTable() {
+      let filtered = players.map((p,i)=>({...p, idx:i}));
+      if(searchText) filtered = filtered.filter(p=>p.name.toLowerCase().includes(searchText.toLowerCase()));
+      if(posFilterVal && posFilterVal!=="All") filtered = filtered.filter(p=>p.type===posFilterVal);
+      // sort by type, then star
+      const order = {DEF:0, MID:1, ATT:2, GK:3};
+      filtered = filtered.sort((a,b)=>{
+        if(order[a.type]!==order[b.type]) return order[a.type]-order[b.type];
+        return getStar(a,b) < getStar(b,a) ? 1 : -1;
+      });
+      const tbody = document.querySelector("#players-table tbody");
+      tbody.innerHTML = "";
+      filtered.forEach((p,idx)=>{
+        const isSel = (p.idx===selectedIdx);
+        tbody.innerHTML += `
+          <tr class="${isSel?"selected":""}" data-idx="${p.idx}">
+            <td>${idx+1}</td>
+            <td class="name-cell">${p.name}</td>
+            <td class="role-cell">${p.role}</td>
+            <td>${p.type}</td>
+            <td>${p.age}</td>
+            <td>${p.height}cm</td>
+            <td>${p.weight}kg</td>
+            <td>${p.foot}</td>
+            <td>${starsHTML(statToStars(avg(p.technical)))}</td>
+            <td>${starsHTML(statToStars(avg(p.mental)))}</td>
+            <td>${starsHTML(statToStars(avg(p.physical)))}</td>
+            <td>${p.type==="GK"?starsHTML(statToStars(avg(p.goalkeeping))):"-"}</td>
+            <td>${p.potential}</td>
+          </tr>
+        `;
+      });
+      Array.from(tbody.querySelectorAll("tr")).forEach(row=>{
+        row.onclick = ()=>{
+          selectedIdx = Number(row.getAttribute("data-idx"));
+          updateTable();
+          updatePlayerDetail();
+        };
+      });
+    }
+    // detail
+    function updatePlayerDetail() {
+      const p = players[selectedIdx]||players[0];
+      if(!p) { document.getElementById('player-detail').innerHTML = ""; return; }
+      document.getElementById("player-detail").innerHTML = `
+        <div class="player-detail${showPotential?' potential-shown':''}">
+          <div class="player-info">
+            <div class="player-name">${p.name}</div>
+            <div class="player-meta">
+              <span>${p.age} years</span> <span>${p.height} cm</span> <span>${p.weight} kg</span>
+              <span class="player-pos">${p.role}</span>
+              <span>${p.foot} Foot</span>
+            </div>
+            <span class="potential-hidden">Potential: ${p.potential}</span>
+          </div>
+          <div class="stat-panels">
+            <div class="stat-panel">
+              <div class="stat-title">TECHNICAL ${starsHTML(statToStars(avg(p.technical)))}</div>
+              <ul class="stat-list">
+                ${statDefs.Technical.map((s,i)=>`<li>${s}<span class="${statClass(p.technical[i],12)}">${p.technical[i]}</span></li>`).join("")}
+              </ul>
+            </div>
+            <div class="stat-panel">
+              <div class="stat-title">MENTAL ${starsHTML(statToStars(avg(p.mental)))}</div>
+              <ul class="stat-list">
+                ${statDefs.Mental.map((s,i)=>`<li>${s}<span class="${statClass(p.mental[i],14)}">${p.mental[i]}</span></li>`).join("")}
+              </ul>
+            </div>
+            <div class="stat-panel">
+              <div class="stat-title">PHYSICAL ${starsHTML(statToStars(avg(p.physical)))}</div>
+              <ul class="stat-list">
+                ${statDefs.Physical.map((s,i)=>`<li>${s}<span class="${statClass(p.physical[i],13)}">${p.physical[i]}</span></li>`).join("")}
+              </ul>
+            </div>
+            ${p.type==="GK"?`
+            <div class="stat-panel">
+              <div class="stat-title">GOALKEEPING ${starsHTML(statToStars(avg(p.goalkeeping)))}</div>
+              <ul class="stat-list">
+                ${statDefs.Goalkeeping.map((s,i)=>`<li>${s}<span class="${statClass(p.goalkeeping[i],12)}">${p.goalkeeping[i]}</span></li>`).join("")}
+              </ul>
+            </div>
+            `:""}
+          </div>
+        </div>
+      `;
+    }
+    // pitch logic: best 1-4-4-2
+    // positions centered and more spaced on y
+    const pitchLayout = [
+      {pos:"GK", label:"GK", left:235, top:495, type:"GK"},
+      {pos:"LB", label:"LB", left:60, top:360, type:"DEF"},
+      {pos:"CB1",label:"CB", left:175, top:394, type:"DEF"},
+      {pos:"CB2",label:"CB", left:295, top:394, type:"DEF"},
+      {pos:"RB", label:"RB", left:420, top:360, type:"DEF"},
+      {pos:"LM", label:"LM", left:60, top:245, type:"MID"},
+      {pos:"CM1",label:"CM", left:180, top:265, type:"MID"},
+      {pos:"CM2",label:"CM", left:290, top:265, type:"MID"},
+      {pos:"RM", label:"RM", left:420, top:245, type:"MID"},
+      {pos:"CF1",label:"CF", left:170, top:110, type:"ATT"},
+      {pos:"CF2",label:"CF", left:300, top:110, type:"ATT"},
+    ];
+    function getStar(p) {
+      if (p.type === "DEF") return statToStars(avg(p.physical));
+      if (p.type === "MID") return statToStars(avg(p.technical));
+      if (p.type === "ATT") return statToStars(avg(p.mental));
+      if (p.type === "GK") return statToStars(avg(p.goalkeeping));
+      return 0;
+    }
+    function updatePitch() {
+      let pool = {GK:[], DEF:[], MID:[], ATT:[]};
+      players.forEach(p=>pool[p.type].push(p));
+      pool.GK.sort((a,b)=>getStar(b)-getStar(a));
+      pool.DEF.sort((a,b)=>getStar(b)-getStar(a));
+      pool.MID.sort((a,b)=>getStar(b)-getStar(a));
+      pool.ATT.sort((a,b)=>getStar(b)-getStar(a));
+      let used = new Set();
+      let posPlayers = pitchLayout.map((pl, i) => {
+        let arr = pool[pl.type];
+        for (let j = 0; j < arr.length; ++j) {
+          if (!used.has(arr[j].name)) {
+            used.add(arr[j].name);
+            return arr[j];
+          }
+        }
+        return arr[0];
+      });
+      let html = "";
+      pitchLayout.forEach((pl,i)=>{
+        let p = posPlayers[i];
+        let iconClass = "pitch-icon";
+        let nameClass = "pitch-name";
+        // Only show the circle, and under it "F. Surname"
+        let displayName = (p.fn.length ? (p.fn[0]+". "+p.sn) : p.sn);
+        html += `<div class="pitch-player" style="left:${pl.left}px;top:${pl.top}px;">
+          <div class="${iconClass}"></div>
+          <div class="${nameClass}">${displayName}</div>
+        </div>`;
+      });
+      document.getElementById('pitch').innerHTML = `
+        <div class="line halfway"></div>
+        <div class="line penalty"></div>
+        <div class="line goal"></div>
+        <div class="circle"></div>
+        ${html}
+      `;
+      // Show avg potential
+      document.getElementById("avg-pot").innerHTML =
+        "Squad avg potential: <span style='color:#fff;font-weight:700'>" +
+        (players.length ? (avg(players.map(p=>p.potential)).toFixed(1)) : "-") + "</span>";
+    }
+    function updateSummary() {
+      let tTec=[], tMen=[], tPhy=[], tGk=[];
+      players.forEach(p=>{
+        tTec.push(...p.technical);
+        tMen.push(...p.mental);
+        tPhy.push(...p.physical);
+        if(p.type==="GK" && p.goalkeeping.length) tGk.push(...p.goalkeeping);
+      });
+      const sumBox = document.getElementById("stats-summary");
+      sumBox.innerHTML = `
+        <div class="stats-summary-box"><span class="stats-summary-label">TEC avg:</span> <span class="stats-summary-val">${(avg(tTec)||0).toFixed(2)}</span></div>
+        <div class="stats-summary-box"><span class="stats-summary-label">MEN avg:</span> <span class="stats-summary-val">${(avg(tMen)||0).toFixed(2)}</span></div>
+        <div class="stats-summary-box"><span class="stats-summary-label">PHY avg:</span> <span class="stats-summary-val">${(avg(tPhy)||0).toFixed(2)}</span></div>
+        <div class="stats-summary-box"><span class="stats-summary-label">GK avg:</span> <span class="stats-summary-val">${tGk.length?(avg(tGk)).toFixed(2):"-"}</span></div>
+      `;
     }
     function showToast(msg) {
       const toast = document.getElementById('toast');
@@ -304,121 +557,9 @@
       selectedIdx = 0;
       updateTable();
       updatePlayerDetail();
+      updatePitch();
       updateSummary();
       showToast("Squad loaded!");
-    }
-    let players = [];
-    let selectedIdx = 0;
-    let showPotential = false;
-    let searchText = "";
-    let posFilterVal = "All";
-    function squadOrder(a,b) {
-      const order = {DEF:0, MID:1, ATT:2, GK:3};
-      if(order[a.type]!==order[b.type]) return order[a.type]-order[b.type];
-      return a.role.localeCompare(b.role);
-    }
-    function updateTable() {
-      let filtered = players.map((p,i)=>({...p, idx:i}));
-      if(searchText) filtered = filtered.filter(p=>p.name.toLowerCase().includes(searchText.toLowerCase()));
-      if(posFilterVal && posFilterVal!=="All") filtered = filtered.filter(p=>p.type===posFilterVal);
-      filtered = filtered.sort(squadOrder);
-      const tbody = document.querySelector("#players-table tbody");
-      tbody.innerHTML = "";
-      filtered.forEach((p,idx)=>{
-        const isSel = (p.idx===selectedIdx);
-        const gkVal = p.type==="GK" ? Math.round((p.goalkeeping.reduce((a,b)=>a+b,0)/p.goalkeeping.length)||0) : "-";
-        const nameTd = p.rainbow
-          ? `<span class="rainbow-glow">${p.name}</span>`
-          : p.name;
-        tbody.innerHTML += `
-          <tr class="${isSel?"selected":""}" data-idx="${p.idx}">
-            <td>${idx+1}</td>
-            <td class="name-cell">${nameTd}${p.rainbow?' <span class="player-gender">(gay)</span>':''}</td>
-            <td class="role-cell">${p.role}</td>
-            <td>${p.type}</td>
-            <td>${p.age}</td>
-            <td>${p.height}cm</td>
-            <td>${p.weight}kg</td>
-            <td>${p.foot}</td>
-            <td class="${statClass(p.tec,12)}">${p.tec}</td>
-            <td class="${statClass(p.men,14)}">${p.men}</td>
-            <td class="${statClass(p.phy,13)}">${p.phy}</td>
-            <td>${gkVal}</td>
-          </tr>
-        `;
-      });
-      Array.from(tbody.querySelectorAll("tr")).forEach(row=>{
-        row.onclick = ()=>{
-          selectedIdx = Number(row.getAttribute("data-idx"));
-          updateTable();
-          updatePlayerDetail();
-        };
-      });
-    }
-    function updatePlayerDetail() {
-      const p = players[selectedIdx]||players[0];
-      if(!p) { document.getElementById('player-detail').innerHTML = ""; return; }
-      const nameSpan = p.rainbow
-        ? `<span class="rainbow-glow">${p.name}</span>`
-        : p.name;
-      document.getElementById("player-detail").innerHTML = `
-        <div class="player-detail${showPotential?' potential-shown':''}">
-          <div class="player-info">
-            <div class="player-name">${nameSpan}${p.rainbow?' <span class="player-gender">(gay)</span>':''}</div>
-            <div class="player-meta">
-              <span>${p.age} years</span> <span>${p.height} cm</span> <span>${p.weight} kg</span>
-              <span class="player-pos">${p.role}</span>
-              <span>${p.foot} Foot</span>
-            </div>
-            <span class="potential-hidden">Potential: ${p.potential}</span>
-          </div>
-          <div class="stat-panels">
-            <div class="stat-panel">
-              <div class="stat-title">TECHNICAL <span style="font-size:.97em;font-weight:700;color:#fff">${p.tec}</span></div>
-              <ul class="stat-list">
-                ${statDefs.Technical.map((s,i)=>`<li>${s}<span class="${statClass(p.technical[i],12)}">${p.technical[i]}</span></li>`).join("")}
-              </ul>
-            </div>
-            <div class="stat-panel">
-              <div class="stat-title">MENTAL <span style="font-size:.97em;font-weight:700;color:#fff">${p.men}</span></div>
-              <ul class="stat-list">
-                ${statDefs.Mental.map((s,i)=>`<li>${s}<span class="${statClass(p.mental[i],14)}">${p.mental[i]}</span></li>`).join("")}
-              </ul>
-            </div>
-            <div class="stat-panel">
-              <div class="stat-title">PHYSICAL <span style="font-size:.97em;font-weight:700;color:#fff">${p.phy}</span></div>
-              <ul class="stat-list">
-                ${statDefs.Physical.map((s,i)=>`<li>${s}<span class="${statClass(p.physical[i],13)}">${p.physical[i]}</span></li>`).join("")}
-              </ul>
-            </div>
-            ${p.type==="GK"?`
-            <div class="stat-panel">
-              <div class="stat-title">GOALKEEPING <span style="font-size:.97em;font-weight:700;color:#fff">${Math.round((p.goalkeeping.reduce((a,b)=>a+b,0)/p.goalkeeping.length)||0)}</span></div>
-              <ul class="stat-list">
-                ${statDefs.Goalkeeping.map((s,i)=>`<li>${s}<span class="${statClass(p.goalkeeping[i],12)}">${p.goalkeeping[i]}</span></li>`).join("")}
-              </ul>
-            </div>
-            `:""}
-          </div>
-        </div>
-      `;
-    }
-    function avg(arr) { return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0; }
-    function updateSummary() {
-      let tTec=[], tMen=[], tPhy=[], tGk=[];
-      players.forEach(p=>{
-        tTec.push(...p.technical);
-        tMen.push(...p.mental);
-        tPhy.push(...p.physical);
-        if(p.type==="GK" && p.goalkeeping.length) tGk.push(...p.goalkeeping);
-      });
-      const sumBox = document.getElementById("stats-summary");
-      sumBox.innerHTML = `
-        <div class="stats-summary-box"><span class="stats-summary-label">TEC avg:</span> <span class="stats-summary-val">${(avg(tTec)||0).toFixed(2)}</span></div>
-        <div class="stats-summary-box"><span class="stats-summary-label">MEN avg:</span> <span class="stats-summary-val">${(avg(tMen)||0).toFixed(2)}</span></div>
-        <div class="stats-summary-box"><span class="stats-summary-label">PHY avg:</span> <span class="stats-summary-val">${(avg(tPhy)||0).toFixed(2)}</span></div>
-        <div class="stats-summary-box"><span class="stats-summary-label">GK avg:</span> <span class="stats-summary-val">${tGk.length?(avg(tGk)).toFixed(2):"-"}</span></div>
-      `;
     }
     document.getElementById('search').addEventListener('input', function() {
       searchText = this.value;
@@ -430,7 +571,6 @@
     });
     document.getElementById('btn-generate').onclick = ()=>{
       generateSquad();
-      updateSummary();
     };
     document.getElementById('btn-save').onclick = saveSquad;
     document.getElementById('btn-load').onclick = loadSquad;
@@ -439,8 +579,8 @@
       this.innerText = showPotential ? "Hide Potential" : "Show Potential";
       updatePlayerDetail();
     };
+    // --- INIT ---
     generateSquad();
-    updateSummary();
   </script>
 </body>
 </html>
