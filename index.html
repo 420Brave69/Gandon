@@ -88,8 +88,8 @@
     .pitch-wrap { width: 600px; margin:36px auto 18px auto; }
     .pitch {
       background: linear-gradient(180deg, #23143b 0%, #191026 100%);
-      border: 4px solid var(--purple-accent);
-      border-radius: 20px;
+      border: 6px solid var(--purple-accent2);
+      border-radius: 24px;
       width: 100%;
       height: 570px;
       position: relative;
@@ -116,30 +116,30 @@
       top: 0;
     }
     .pitch-icon {
-      width: 64px;
-      height: 64px;
+      width: 70px;
+      height: 70px;
       border-radius: 50%;
       background: var(--purple-accent2);
-      border: 3.5px solid var(--purple-accent);
+      border: 5px solid var(--purple-accent);
       box-shadow: 0 2px 12px #0007;
       margin: 0 auto 0 auto;
       display: block;
     }
     .pitch-player .pitch-name {
       font-family:'Montserrat',sans-serif;
-      margin-top: 18px;
-      padding: 4px 10px 4px 10px;
+      margin-top: 15px;
+      padding: 4px 7px 4px 7px;
       border-radius: 8px;
       background: var(--purple-mid);
       color: var(--white);
       font-weight: 700;
-      font-size: 1.12em;
+      font-size: 0.90em;
       letter-spacing: 0.5px;
       min-width: 50px;
-      max-width: 100px;
+      max-width: 110px;
       overflow-wrap: break-word;
       word-break: break-all;
-      box-shadow: 0 1px 7px #0002;
+      box-shadow: 0 1.5px 9px #0002;
       text-align:center;
       display:inline-block;
     }
@@ -274,7 +274,6 @@
       Physical: [3,13],
       Goalkeeping: [2,12]
     };
-    // star conversion
     function avg(arr) { return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0; }
     function statToStars(val) {
       if (val < 3) return 1;
@@ -300,7 +299,6 @@
       if(val<=Math.floor(max/3)) return "stat-low";
       return "";
     }
-    // names logic
     function randomUniqueName(usedNames) {
       let tries = 0;
       let fn, sn;
@@ -324,7 +322,6 @@
       const t = roll(1,10);
       return t === 1 ? "Both" : (t < 6 ? "Left" : "Right");
     }
-    // squad generation
     function generateSquad() {
       let used = {}, usedNames = new Set();
       function pickRole(type) {
@@ -368,7 +365,6 @@
         name, fn, sn, age, height, weight, role, type, tec, men, phy, technical, mental, physical, foot, potential, goalkeeping
       };
     }
-    // table
     let players = [];
     let selectedIdx = 0;
     let showPotential = false;
@@ -378,7 +374,6 @@
       let filtered = players.map((p,i)=>({...p, idx:i}));
       if(searchText) filtered = filtered.filter(p=>p.name.toLowerCase().includes(searchText.toLowerCase()));
       if(posFilterVal && posFilterVal!=="All") filtered = filtered.filter(p=>p.type===posFilterVal);
-      // sort by type, then star
       const order = {DEF:0, MID:1, ATT:2, GK:3};
       filtered = filtered.sort((a,b)=>{
         if(order[a.type]!==order[b.type]) return order[a.type]-order[b.type];
@@ -414,7 +409,6 @@
         };
       });
     }
-    // detail
     function updatePlayerDetail() {
       const p = players[selectedIdx]||players[0];
       if(!p) { document.getElementById('player-detail').innerHTML = ""; return; }
@@ -460,8 +454,6 @@
         </div>
       `;
     }
-    // pitch logic: best 1-4-4-2
-    // positions centered and more spaced on y
     const pitchLayout = [
       {pos:"GK", label:"GK", left:235, top:495, type:"GK"},
       {pos:"LB", label:"LB", left:60, top:360, type:"DEF"},
@@ -505,7 +497,6 @@
         let p = posPlayers[i];
         let iconClass = "pitch-icon";
         let nameClass = "pitch-name";
-        // Only show the circle, and under it "F. Surname"
         let displayName = (p.fn.length ? (p.fn[0]+". "+p.sn) : p.sn);
         html += `<div class="pitch-player" style="left:${pl.left}px;top:${pl.top}px;">
           <div class="${iconClass}"></div>
@@ -519,7 +510,6 @@
         <div class="circle"></div>
         ${html}
       `;
-      // Show avg potential
       document.getElementById("avg-pot").innerHTML =
         "Squad avg potential: <span style='color:#fff;font-weight:700'>" +
         (players.length ? (avg(players.map(p=>p.potential)).toFixed(1)) : "-") + "</span>";
@@ -579,7 +569,6 @@
       this.innerText = showPotential ? "Hide Potential" : "Show Potential";
       updatePlayerDetail();
     };
-    // --- INIT ---
     generateSquad();
   </script>
 </body>
